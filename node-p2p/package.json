@@ -1,0 +1,22 @@
+{
+  "name": "p2p",
+  "version": "1.0.0",
+  "description": "peer2peer demo",
+  "main": "index.js",
+  "dependencies": {
+    "it-buffer": "^0.1.1",
+    "it-concat": "^1.0.0",
+    "it-pipe": "^1.1.0",
+    "libp2p": "^0.27.3",
+    "libp2p-mplex": "^0.9.4",
+    "libp2p-secio": "^0.12.3",
+    "libp2p-tcp": "^0.14.4",
+    "peer-info": "^0.17.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

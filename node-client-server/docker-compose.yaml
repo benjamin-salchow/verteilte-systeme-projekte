@@ -1,0 +1,20 @@
+version: '3'
+services:
+  server:
+    build: .
+    #volumes:
+    #  - ./:/usr/src/app
+    command: node server.js
+    ports:
+      - "8080:8080"
+  client:
+    build: .
+    #volumes:
+    #  - ./:/usr/src/app
+    environment:
+      - SERVER=server
+    command: node client.js
+    links:
+      - server
+    depends_on:
+      - server

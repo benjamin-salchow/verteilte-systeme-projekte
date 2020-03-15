@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mqttserver:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+  node:
+    build: .
+    environment:
+      - NODENAME=node
+    command: node node.js
+    links:
+      - mqttserver
+    depends_on:
+      - mqttserver
+
