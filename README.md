@@ -45,4 +45,13 @@ Beispiel mit einer Peer2Peer-Bibliothek.
 
 ### Java
 
-**Hinweis:** Ein Java-Beispiel Client-Server wird in den nächsten Tagen folgen...
+#### Client-Server Webserver
+
+Einfacher Webserver (HTTP).
+
+[- Link Anleitung ->](java-spring-server-client-docker/README.md)
+
+[- Link Ordner->](java-spring-server-client-docker/)
+
+
+**Hinweis:** Ein Java-Beispiel hat noch keinen Client, daher muss dieser noch implementiert werden.
