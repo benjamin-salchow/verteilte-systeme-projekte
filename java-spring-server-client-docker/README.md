@@ -45,7 +45,33 @@ automatisch der "Server"-Container  gestartet werden.
 
 Der Output sieht wie folgt aus:
 ```sh
-todo
+Successfully built e129baf9b757
+Successfully tagged java-spring-server-client-docker_server:latest
+Recreating java-spring-server-client-docker_server_1 ... done
+Attaching to java-spring-server-client-docker_server_1
+server_1  | 
+server_1  |   .   ____          _            __ _ _
+server_1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+server_1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+server_1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+server_1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+server_1  |  =========|_|==============|___/=/_/_/_/
+server_1  |  :: Spring Boot ::        (v2.2.1.RELEASE)
+server_1  | 
+server_1  | 2020-03-16 20:46:31.208  INFO 1 --- [           main] hello.Application                        : Starting Application on 78d0b676af67 with PID 1 (/app.jar started by spring in /)
+server_1  | 2020-03-16 20:46:31.217  INFO 1 --- [           main] hello.Application                        : No active profile set, falling back to default profiles: default
+server_1  | 2020-03-16 20:46:34.455  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+server_1  | 2020-03-16 20:46:34.497  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+server_1  | 2020-03-16 20:46:34.498  INFO 1 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.27]
+server_1  | 2020-03-16 20:46:34.712  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+server_1  | 2020-03-16 20:46:34.712  INFO 1 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 3220 ms
+server_1  | 2020-03-16 20:46:35.269  INFO 1 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+server_1  | 2020-03-16 20:46:35.957  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+server_1  | 2020-03-16 20:46:35.967  INFO 1 --- [           main] hello.Application                        : Started Application in 6.391 seconds (JVM running for 8.022)
+server_1  | 2020-03-16 20:46:51.386  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+server_1  | 2020-03-16 20:46:51.387  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+server_1  | 2020-03-16 20:46:51.423  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 35 ms
+server_1  | Got a request and serving 'Hello World
 ```
 
 Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
