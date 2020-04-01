@@ -1,0 +1,15 @@
+version: '3'
+services:
+  mqttserver:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+  node:
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - mqttserver
+    depends_on:
+      - mqttserver
+

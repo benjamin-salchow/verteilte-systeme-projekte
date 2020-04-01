@@ -183,3 +183,7 @@ atlassian-ide-plugin.xml
 .gradletasknamecache
 
 build
+
+#wraper
+!maven-wrapper.jar
+!gradle-wrapper.jar

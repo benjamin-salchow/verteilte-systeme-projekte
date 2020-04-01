@@ -53,5 +53,12 @@ Einfacher Webserver (HTTP).
 
 [- Link Ordner->](java-spring-server-client-docker/)
 
+#### Message Oriented MQTT
+
+Einfaches Beispiel mit einem MQTT-Server auf Mosquitto Basis und einer Java Spring Node.
+
+[- Link Anleitung ->](java-spring-mqtt/README.md)
+
+[- Link Ordner->](java-spring-mqtt/)
 
 **Hinweis:** Ein Java-Beispiel hat noch keinen Client, daher muss dieser noch implementiert werden.
