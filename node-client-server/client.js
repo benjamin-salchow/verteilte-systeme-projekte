@@ -6,7 +6,7 @@ const SERVER = process.env.SERVER || "localhost";
 function postRandomNumberToServer() {
     // Use of defined client entry point as POST!
     axios.post(`http://${SERVER}:8080/client_post`, {
-        // definition of actual content that should be sned with post as JSON
+        // definition of actual content that should be send with post as JSON
         post_content: 'Random Number: ' + Math.random()
     })
         .then((res) => {
