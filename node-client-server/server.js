@@ -48,7 +48,7 @@ app.post('/client_post', (req, res) => {
 
 // All requests to /static/... will be reidrected to static files in the folder "public"
 // call it with: http://localhost:8080/static
-app.use('/static', express.static('static'))
+app.use('/static', express.static('public'))
 
 // Start the actual server
 app.listen(PORT, HOST);
