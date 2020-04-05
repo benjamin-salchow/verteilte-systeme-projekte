@@ -65,6 +65,14 @@ Beispiel mit einer Peer2Peer-Bibliothek.
 
 [- Link Ordner->](node-p2p/)
 
+#### Client-Server Webserver - Extendet
+
+Einfacher Webserver (HTTP) mit Client, in dem zwei getrennte Container `client` sowie `server` gebaut werden. Darüber hinaus werden in der statischen Datei `index.html` unter `server/public` zwei Beispiele gezeigt, wie eine Client-Server-Aktion über den Browser ermöglicht werden kann mittels Formulare oder AJAX.
+
+[- Link Anleitung ->](node-client-server-extendet/README.md)
+
+[- Link Ordner->](node-client-server-extendet/)
+
 ### Java
 
 #### Allgemeine Informationen

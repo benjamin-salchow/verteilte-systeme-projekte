@@ -1,0 +1,14 @@
+version: '3'
+services:
+  server:
+    build: server
+    ports:
+      - "8080:8080"
+  client:
+    build: client
+    environment:
+      - SERVER=server
+    links:
+      - server
+    depends_on:
+      - server

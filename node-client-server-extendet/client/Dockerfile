@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "node", "node.js" ]
+CMD [ "node", "client.js" ]
