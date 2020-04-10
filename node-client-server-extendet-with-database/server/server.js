@@ -6,15 +6,16 @@ const express = require('express');
 const mysql = require('mysql');
 // Database connection info - used from environment variables
 var dbInfo = {
+    connectionLimit : 10,
     host: process.env.MYSQL_HOSTNAME,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
 };
 
-var connection = mysql.createConnection(dbInfo);
+var connection = mysql.createPool(dbInfo);
 console.log("Conecting to database...");
-connection.connect();
+// connection.connect(); <- connect not required in connection pool
 
 // SQL Database init.
 // In this current demo, this is done by the "database.sql" file which is stored in the "db"-container (./db/).
