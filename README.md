@@ -73,6 +73,14 @@ Einfacher Webserver (HTTP) mit Client, in dem zwei getrennte Container `client` 
 
 [- Link Ordner->](node-client-server-extendet/)
 
+#### Client-Server Webserver - Extendet mit Datenbank
+
+Erweiterung des `Client-Server Webserver - Extendet`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](node-client-server-extendet-with-database/README.md)
+
+[- Link Ordner->](node-client-server-extendet-with-database/)
+
 ### Java
 
 #### Allgemeine Informationen
