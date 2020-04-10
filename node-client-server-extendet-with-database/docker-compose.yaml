@@ -4,6 +4,7 @@ services:
     build: server
     ports:
       - "8080:8080"
+    restart: always
     environment:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
