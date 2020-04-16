@@ -72,6 +72,12 @@ erreicht werden. Hierbei muss man wie im `docker-compose.yaml` den Benutzernamen
 
 Dies kann auch für den Export verwendet werden mittels `Exportieren` -> `Schnell` -> `SQL`. Die daraus resultierende Datei kann dann in dem Ordner `db` als `database.sql` hinterlegt werden. Bei dem nächsten Neuerstellen des Datenbank-Containers wird diese dann automatisch geladen.
 
+### Static Files
+
+Alle statischen Dateien liegen wie bereits beschrieben in dem Ordner `public`, welcher über `/static/` per Webserver erreichbar ist. Am besten verwendet man relative Pfade zu den Dateien, so wie in der Datei `static.html`. Diese Datei befindet sich in `./server/public/static.html`.
+
+In diesem Beispiel ist beschrieben, wie man Bilder und eigene CSS-Dateien referenzieren kann. Darüber hinaus können auch Javascript-Dateien so richtig ausgegliedert werden. Idealerweise überlegt man sich eine sinnvolle Ordnerstruktur, um dies auch gut warten zu können.
+
 ### Client
 
 Der Client ist im Webbrowser, jedoch kann wie im `node-client-server-extendet`-Beispiel [- node-client-server-extendet Beispiel ->](../node-client-server-extendet/README.md) ein eigener Client-Container angelegt werden, welcher die REST-Calls testet.
