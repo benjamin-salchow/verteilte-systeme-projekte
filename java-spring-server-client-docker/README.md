@@ -90,6 +90,14 @@ Killing node-client-server_server_1  ... done
 
 **Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird. Jedoch muss die Java-Anwendung mittels `./gradlew build` gebaut werden.
 
+**Hinweis:** Alternativ kann natürlich auch Maven (`mvn`) für das Bauen anstelle von Gradle verwendet werden mittels:
+```sh
+# Compile Java Code:
+mvn compile
+# Package files for container:
+mvn package 
+```
+
 ## Sourcecode
 
 Da Java-Projekte eine komplexere Struktur haben, findet man den Source Code in:
