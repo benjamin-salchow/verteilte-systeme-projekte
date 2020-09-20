@@ -21,7 +21,7 @@ Danach sollte man eine Webseite sehen, welche eine ID angibt. Diese ID ist das e
 Diese kann per Peer2Peer über Web-RTC separat angesprochen werden.
 
 Nun öffnen wir ein weiteres Web-Browser Fenster mit folgender URL:
- * http://0.0.0.0:8080/static/send.html
+ * http://localhost:8080/static/send.html
 In diesem Fenster können wir nun oben die ID eingeben, welche wir bei dem Receiver gesehen haben.
 Die ID basiert auf einer UUID und sieht z.B. so aus: `023c0004-700f-4392-8d1e-399faec8ad2e`.
 Danach auf `connect` clicken und nun sollten die beiden Browser miteinander per peer2peer kommunizieren können.
