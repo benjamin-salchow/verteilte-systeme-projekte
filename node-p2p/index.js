@@ -1,63 +1,47 @@
-/* eslint-disable no-console */
-'use strict'
+'use strict';
 
-const Libp2p = require('libp2p')
-const TCP = require('libp2p-tcp')
-const SECIO = require('libp2p-secio')
-const MPLEX = require('libp2p-mplex')
-const PeerInfo = require('peer-info')
+// Load dependencies
+const express = require('express');
+const { ExpressPeerServer } = require('peer');
 
-const pipe = require('it-pipe')
-const concat = require('it-concat')
+// Constants
+const PORT = process.env.PORT || 8080;
+const HOST = '0.0.0.0';
 
-const createNode = async (peerInfo) => {
-  // To signall the addresses we want to be available, we use
-  // the multiaddr format, a self describable address
-  peerInfo.multiaddrs.add('/ip4/0.0.0.0/tcp/0')
+// Create express base app
+const app = express();
 
-  const node = await Libp2p.create({
-    peerInfo,
-    modules: {
-      transport: [TCP],
-      connEncryption: [SECIO],
-      streamMuxer: [MPLEX]
-    }
-  })
+// Entrypoint - call it with: http://localhost:8080/ -> redirect you to http://localhost:8080/static
+app.get('/', (req, res) => {
+  console.log("Got a request and redirect it to the static index page");
+  // redirect will send the client to another path / route. In this case to the static route.
+  res.redirect('/static');
+});
 
-  await node.start()
-  return node
-}
+// All requests to /static/... will be reidrected to static files in the folder "public"
+// call it with: http://localhost:8080/static
+app.use('/static', express.static('public'))
 
-function printAddrs (node, number) {
-  console.log('node %s is listening on:', number)
-  node.peerInfo.multiaddrs.forEach((ma) => console.log(ma.toString()))
-}
+// Start the actual server
+const server = app.listen(PORT, HOST);
 
-;(async () => {
-  const [peerInfo1, peerInfo2] = await Promise.all([
-    PeerInfo.create(),
-    PeerInfo.create()
-  ])
-  const [node1, node2] = await Promise.all([
-    createNode(peerInfo1),
-    createNode(peerInfo2)
-  ])
+// Create PeerJS Server
+const peerServer = ExpressPeerServer(server, {
+  path: '/myapp',
+  proxied: true,
+  // iceServers:    [{ 'urls': ['stun:stun.l.google.com:19302'] }]
+});
 
-  printAddrs(node1, '1')
-  printAddrs(node2, '2')
+// Link created PeerJS Server to the express app
+app.use('/peerjs', peerServer);
 
-  node2.handle('/print', async ({ stream }) => {
-    const result = await pipe(
-      stream,
-      concat
-    )
-    console.log(result.toString())
-  })
+// Print out some information after start of the server
+console.log(`Running on http://${HOST}:${PORT}`);
+console.log(`Open the following URL with your Browser: http://localhost:${PORT}/`);
 
-  const { stream } = await node1.dialProtocol(node2.peerInfo, '/print')
 
-  await pipe(
-    ['Hello', ' ', 'p2p', ' ', 'world', '!'],
-    stream
-  )
-})();
+// ==== events of peerjs =====
+// Connection event - triggers when a client connect
+peerServer.on('connection', (client) => { console.log("client connected: ", client) });
+// Dissconection event - triggers when a client disconnects
+peerServer.on('disconnect', (client) => { console.log("client disconnected: ", client) });
