@@ -22,6 +22,7 @@ const server = net.createServer((socket) => {
     //socket.pipe(socket);
 });
 
+console.log("Server is ready...")
 // Defines the TCP port which should be used:
 server.listen(9233, '0.0.0.0');
 // IP: 0.0.0.0 means to listen on all interfaces!

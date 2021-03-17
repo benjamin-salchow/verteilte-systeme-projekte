@@ -69,7 +69,7 @@ Darüber hinaus wird der Container `server` mittels dem `--build` flag auch neu 
 Der Output sieht wie folgt aus:
 ```sh
 Building server
-Step 1/7 : FROM node:alpine
+Step 1/7 : FROM node:lts-alpine
  ---> b01d82bd42de
 Step 2/7 : WORKDIR /usr/src/app
  ---> Using cache
