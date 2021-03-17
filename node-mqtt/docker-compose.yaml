@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   mqttserver:
-    image: eclipse-mosquitto:latest
+    image: eclipse-mosquitto:1.6
     ports:
       - "1883:1883"
   node:
