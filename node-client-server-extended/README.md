@@ -1,4 +1,4 @@
-# Client - (Web-)Server Extendet mit Node.js
+# Client - (Web-)Server Extended mit Node.js
 
 ## Allgemein
 
@@ -81,10 +81,10 @@ Darüber hinaus werden die beiden Container `server` und `client` mittels dem `-
 Der Output sieht wie folgt aus:
 ```sh
 Successfully built e917e4eb5191
-Successfully tagged node-client-server-extendet_client:latest
-Creating node-client-server-extendet_server_1 ... done
-Creating node-client-server-extendet_client_1 ... done
-Attaching to node-client-server-extendet_server_1, node-client-server-extendet_client_1
+Successfully tagged node-client-server-extended_client:latest
+Creating node-client-server-extended_server_1 ... done
+Creating node-client-server-extended_client_1 ... done
+Attaching to node-client-server-extended_server_1, node-client-server-extended_client_1
 server_1  | Running on http://0.0.0.0:8080
 server_1  | Client send 'post_content' with content: Random Number: 0.4803556287641142
 client_1  | statusCode: 200
@@ -101,11 +101,11 @@ Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
-Stopping node-client-server-extendet_client_1 ... 
-Stopping node-client-server-extendet_server_1 ... 
+Stopping node-client-server-extended_client_1 ... 
+Stopping node-client-server-extended_server_1 ... 
 # wenn nochmal [strg] + [c] gedrückt wird:
-Stopping node-client-server-extendet_client_1 ... done
-Stopping node-client-server-extendet_server_1 ... done
+Stopping node-client-server-extended_client_1 ... done
+Stopping node-client-server-extended_server_1 ... done
 ```
 
 **Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` die beiden Container `client` und `server` neu gebaut werden, damit alle Änderungen im `client.js` sowie im `server.js` in den jeweiligen Container integriert werden.

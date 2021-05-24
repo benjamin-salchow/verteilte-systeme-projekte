@@ -16,7 +16,7 @@ Für die Entwicklung von PoCs (Proof of Concepts) ist Node.js eine sehr beliebte
 
 Im Folgenden sind einige interessante Links, die beim Entwickeln helfen können:
 
- * W3School
+ * W3Schools
    * Sehr gutes Nachschlagewerk für den Einstieg
    * JavaScript allgemein (browserspezifisch grundlegend auch für Node.js): https://www.w3schools.com/js/default.asp
    * JSON: https://www.w3schools.com/js/js_json.asp
@@ -65,21 +65,53 @@ Beispiel mit einer Peer2Peer-Bibliothek.
 
 [- Link Ordner->](node-p2p/)
 
-#### Client-Server Webserver - Extendet
+#### Client-Server Webserver - Extended
 
 Einfacher Webserver (HTTP) mit Client, in dem zwei getrennte Container `client` sowie `server` gebaut werden. Darüber hinaus werden in der statischen Datei `index.html` unter `server/public` zwei Beispiele gezeigt, wie eine Client-Server-Aktion über den Browser ermöglicht werden kann mittels Formulare oder AJAX.
 
-[- Link Anleitung ->](node-client-server-extendet/README.md)
+[- Link Anleitung ->](node-client-server-extended/README.md)
 
-[- Link Ordner->](node-client-server-extendet/)
+[- Link Ordner->](node-client-server-extended/)
 
-#### Client-Server Webserver - Extendet mit Datenbank
+#### Client-Server Webserver - Extended mit Datenbank
 
-Erweiterung des `Client-Server Webserver - Extendet`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+Erweiterung des `Client-Server Webserver - Extended`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
 
-[- Link Anleitung ->](node-client-server-extendet-with-database/README.md)
+[- Link Anleitung ->](node-client-server-extended-with-database/README.md)
 
-[- Link Ordner->](node-client-server-extendet-with-database/)
+[- Link Ordner->](node-client-server-extended-with-database/)
+
+### PHP
+
+#### Allgemeine Informationen
+
+Da PHP bereits im vorherigen Semester unterrichtet wurde, kann natürlich auch das Projekt mittels PHP umgesetzt werden.
+PHP ist eine bekannte Skriptsprache, die z.B. von `Wordpress` oder `Nextcloud` verwendet wird.
+
+Im Folgenden sind einige interessante Links, die beim Entwickeln helfen können:
+
+ * W3Schools
+   * Sehr gutes Nachschlagewerk für den Einstieg
+   * PHP allgemein: https://www.w3schools.com/php/
+   * PHP OOP: https://www.w3schools.com/php/php_oop_what_is.asp
+ * PHP.net
+   * https://www.php.net/
+
+#### Client-Server Webserver
+
+Einfacher Webserver (HTTP) mit PHP, der im Container `server` läuft. Dieser verfügt über statische Dateien, die in `index.php` unter `server/src` exemplarisch gezeigt werden.
+
+[- Link Anleitung ->](php-client-server/README.md)
+
+[- Link Ordner->](php-client-server/)
+
+#### Client-Server Webserver mit Datenbank
+
+Erweiterung des `Client-Server Webserver`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](php-client-server-with-database/README.md)
+
+[- Link Ordner->](php-client-server-with-database/)
 
 ### Java
 

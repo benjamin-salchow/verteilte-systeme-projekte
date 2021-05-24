@@ -1,12 +1,12 @@
-# Client - (Web-)Server Extendet mit einer Datenbank in Node.js
+# Client - (Web-)Server Extended mit einer Datenbank in Node.js
 
 ## Allgemein
 
 In diesem Beispiel werden ein Node.js Webserver (mittels Express) gestartet und Zugriffspunkte (Pfäde) definiert. Darüber hinaus wird ein 'mariaDB'-Datenbankcontainer angelegt, welcher vom Webserver verwendet wird.
 
-Bitte schaue zuerst das Beispiel `node-client-server-extendet` an: [- node-client-server-extendet Beispiel ->](../node-client-server-extendet/README.md)
+Bitte schaue zuerst das Beispiel `node-client-server-extended` an: [- node-client-server-extended Beispiel ->](../node-client-server-extended/README.md)
 
-In dieser Anleitung wird nur auf alle Erweiterungen des Extendet-Beispiels der Datenbank eingegangen.
+In dieser Anleitung wird nur auf alle Erweiterungen des Extended-Beispiels der Datenbank eingegangen.
 
 ![Screenshot](screenshot.png)
 
@@ -47,7 +47,7 @@ Zugriffspunkte:
    * `{ title: "", description: ""}`
    * wird zur `table1` hinzugefügt. Dabei werden die `task_id` sowie die `created_at` automatisch von der Datenbank ausgefüllt (siehe query im Sourcecode).
 
-Zugriffspunkte vom `node-client-server-extendet` sind enthalten, aber in dieser Readme beschrieben: [- node-client-server-extendet Beispiel ->](../node-client-server-extendet/README.md)
+Zugriffspunkte vom `node-client-server-extended` sind enthalten, aber in dieser Readme beschrieben: [- node-client-server-extended Beispiel ->](../node-client-server-extended/README.md)
 
 Die `database.html` spielt dabei eine wichtige Rolle. In dieser Datei befindet sich `javascript` Code, welcher diese Anfragen stellt und auch in die HTML-Seite integriert (daher bitte die `database.html` anschauen).
 Dabei gibt es auch ein Error-Handling, welches über den `alert` angezeigt wird. Jegliche Funktion wie löschen oder hinzufügen führt anschließend wieder das Laden der Datenbank aus, damit der neue Zustand gezeigt wird.
@@ -80,7 +80,7 @@ In diesem Beispiel ist beschrieben, wie man Bilder und eigene CSS-Dateien refere
 
 ### Client
 
-Der Client ist im Webbrowser, jedoch kann wie im `node-client-server-extendet`-Beispiel [- node-client-server-extendet Beispiel ->](../node-client-server-extendet/README.md) ein eigener Client-Container angelegt werden, welcher die REST-Calls testet.
+Der Client ist im Webbrowser, jedoch kann wie im `node-client-server-extended`-Beispiel [- node-client-server-extended Beispiel ->](../node-client-server-extended/README.md) ein eigener Client-Container angelegt werden, welcher die REST-Calls testet.
 
 ## Installation und lokale Ausführung
 
@@ -117,11 +117,11 @@ Darüber hinaus werden die beiden Container `server` und `client` mittels dem `-
 Der Output sieht wie folgt aus:
 ```sh
 Successfully built f34216b40a71
-Successfully tagged node-client-server-extendet-with-database_server:latest
-Creating node-client-server-extendet-with-database_meinecooledb_1 ... done
-Creating node-client-server-extendet-with-database_phpmyadmin_1   ... done
-Creating node-client-server-extendet-with-database_server_1       ... done
-Attaching to node-client-server-extendet-with-database_phpmyadmin_1, node-client-server-extendet-with-database_meinecooledb_1, node-client-server-extendet-with-database_server_1
+Successfully tagged node-client-server-extended-with-database_server:latest
+Creating node-client-server-extended-with-database_meinecooledb_1 ... done
+Creating node-client-server-extended-with-database_phpmyadmin_1   ... done
+Creating node-client-server-extended-with-database_server_1       ... done
+Attaching to node-client-server-extended-with-database_phpmyadmin_1, node-client-server-extended-with-database_meinecooledb_1, node-client-server-extended-with-database_server_1
 meinecooledb_1  | 2020-04-10 13:38:44+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 1:10.4.12+maria~bionic started.
 phpmyadmin_1    | phpMyAdmin not found in /var/www/html - copying now...
 meinecooledb_1  | 2020-04-10 13:38:44+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
@@ -153,13 +153,13 @@ Um alle Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
-Stopping node-client-server-extendet-with-database_server_1       ...
-Stopping node-client-server-extendet-with-database_phpmyadmin_1   ...
-Stopping node-client-server-extendet-with-database_meinecooledb_1 ...
+Stopping node-client-server-extended-with-database_server_1       ...
+Stopping node-client-server-extended-with-database_phpmyadmin_1   ...
+Stopping node-client-server-extended-with-database_meinecooledb_1 ...
 # wenn nochmal [strg] + [c] gedrückt wird:
-Stopping node-client-server-extendet-with-database_server_1       ... done
-Stopping node-client-server-extendet-with-database_phpmyadmin_1   ... done
-Stopping node-client-server-extendet-with-database_meinecooledb_1 ... done
+Stopping node-client-server-extended-with-database_server_1       ... done
+Stopping node-client-server-extended-with-database_phpmyadmin_1   ... done
+Stopping node-client-server-extended-with-database_meinecooledb_1 ... done
 ```
 
 **Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` alle Container neu gebaut werden, damit alle Änderungen im `server.js` sowie im Datenbankschema `database.sql` in den jeweiligen Container integriert werden.
@@ -184,7 +184,7 @@ Stopping node-client-server-extendet-with-database_meinecooledb_1 ... done
    * Alerts: https://getbootstrap.com/docs/4.3/components/alerts/
    * Tabelle: https://getbootstrap.com/docs/4.0/content/tables/
    * Buttons: https://getbootstrap.com/docs/4.3/components/buttons/
- * W3School:
+ * W3Schools:
    * Button onclick Event: https://www.w3schools.com/jsref/event_onclick.asp
    * JSON HTML Table: https://www.w3schools.com/js/js_json_html.asp
    * AJAX: https://www.w3schools.com/xml/ajax_intro.asp
