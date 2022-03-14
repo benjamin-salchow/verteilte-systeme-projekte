@@ -1,0 +1,39 @@
+version: '3.3'
+services:
+  server:
+    build: server
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_HOSTNAME: meinecooledb
+    links:
+      - meinecooledb
+    depends_on:
+      - meinecooledb
+    # Overwrite to nodemon only for DEV!
+    command: nodemon server.js
+    # Host mount path overwrite for nodemon - only for DEV!
+    volumes:
+      # :Z may needs to be removed, if this does not work
+      - ./server:/usr/src/app:Z
+  meinecooledb:
+    # Use of a modified datbase in 'db'-folder.
+    # See README.md for more information.
+    build: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8085:80
+    environment:
+      PMA_HOST: meinecooledb

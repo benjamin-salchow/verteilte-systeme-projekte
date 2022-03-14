@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <title>My cool page with Nodemon</title>
+    <!-- The following is bootstrap: https://getbootstrap.com/docs/4.3/getting-started/introduction/ -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- The container is for the theme / deisgn -->
+    <main role="main" class="container">
+
+
+        <h1>This is the sample with Nodemon</h1>
+        <div class="alert alert-info" role="alert">
+            The server.js will automatically reload as soon as a change happens.<br>
+            Static files are updated live and only require a simple reload in the browser.<br>
+            Please remove any nodemon related change in the final version, because this is only for development.
+        </div>
+        <hr>
+
+        <!-- Link to the Database Sample -->
+        <h2>Link to the Database sample</h2>
+        <p>All database related functions are in a separate file. Follow the following link:</p>
+        <a href="database.html">database.html</a>
+
+        <!-- Link to the Static File Sample -->
+        <hr>
+        <h2>Link to the Static File Sample</h2>
+        <p>All static files related functions are in a separate file. Follow the following link:</p>
+        <a href="static.html">static.html</a>
+
+        <!-- Button 1 example with plain HTML -->
+        <hr>
+        <h2>This is the button 1 example</h2>
+        <p>The following is an HTML formular with a button:</p>
+        <form action="/button1_name/" method="post">
+            <div class="form-group">
+                <label for="name">Enter name: </label>
+                <input id="name" type="text" name="name" class="form-control" value="Default name">
+            </div>
+            <input type="submit" class="btn btn-primary" value="OK - Send to server.js">
+
+        </form>
+        <div class="alert alert-info" role="alert">
+            More information here: <a
+                href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms">https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms</a>
+        </div>
+        <!-- End of Button 1 example -->
+
+        <!-- Button 2 example with AJAX -->
+        <hr>
+        <h2>This is the button 2 example</h2>
+        <p>The following is a browser JS AJAX example:</p>
+        <button type="button" onclick="loadDoc()" class="btn btn-primary">Load random number from Server.js - press
+            multiple times</button>
+        <br><br>
+        <div id="target" class="alert alert-secondary">
+            Press the button above and take a look at the server.js logs
+        </div>
+
+        <div class="alert alert-info" role="alert">
+            More information here: <a
+                href="https://www.w3schools.com/xml/ajax_intro.asp">https://www.w3schools.com/xml/ajax_intro.asp</a>
+        </div>
+
+        <script>
+            function loadDoc() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("target").innerHTML =
+                            this.responseText;
+                    }
+                };
+                // the "../" is required because we're in "static" folder!
+                xhttp.open("GET", "../button2", true);
+                xhttp.send();
+            }
+        </script>
+
+    </main><!-- /.container -->
+</body>
+
+</html>
