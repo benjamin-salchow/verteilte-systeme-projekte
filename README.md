@@ -81,6 +81,14 @@ Erweiterung des `Client-Server Webserver - Extended`-Beispiels mit einer SQL-Dat
 
 [- Link Ordner->](node-client-server-extended-with-database/)
 
+#### Client-Server Webserver - Extended mit Datenbank und Nodemon
+
+Erweiterung des `Client-Server Webserver - Extended mit Datenbank`-Beispiels mit Nodemon. Dieses Tool ermöglicht für die Entwicklung ein Live-Update und automatischen Neustart des Node.js Servers für eine schnellere Entwicklung.
+
+[- Link Anleitung ->](node-client-server-extended-with-database-nodemon/README.md)
+
+[- Link Ordner->](node-client-server-extended-with-database-nodemon/)
+
 ### PHP
 
 #### Allgemeine Informationen

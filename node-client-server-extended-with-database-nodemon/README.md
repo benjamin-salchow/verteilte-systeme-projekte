@@ -22,9 +22,12 @@ Dies bedeutet, dass das Löschen, Anlegen oder Ändern von Dateien bzw. Verzeich
 
 **Wichtig:** `nodemon` ist ein Development Tool und das sollte für die Abgabe entfernt werden.
 
-1. Verzeichnismount: <todo>
-2. Löschen des Überschreibens durch command <todo>
-3. Entfernen der nodemon dependency
+1. Verzeichnismount: 
+   * https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/docker-compose.yaml#L20-L22
+2. Löschen des Überschreibens durch command 
+   * https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/docker-compose.yaml#L18
+3. Entfernen der nodemon dependency im Container
+   * https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/server/Dockerfile#L10
 
 
 ### Static Files
@@ -42,7 +45,7 @@ npm install
 ```
 alle definierten Bibliotheken im `package.js` heruntergeladen werden. Sonst kann der Container nicht gestartet werden.
 
-**Hinweis:** nodemon muss nicht lokal installiert werden. Es reicht vollkommen aus, dass dies nur im Container läuft. Dort wird es in Zeile <todo> installiert.
+**Hinweis:** nodemon muss nicht lokal installiert werden. Es reicht vollkommen aus, dass dies nur im Container läuft. Dort wird es in folgender Zeile (https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/server/Dockerfile#L10) installiert.
 
 Danach kann in diesem Ordner folgender Befehl ausgeführt werden:
 
@@ -51,7 +54,7 @@ Danach kann in diesem Ordner folgender Befehl ausgeführt werden:
 docker-compose up --build
 ```
 
-**Hinweis:** Sollte es Probleme geben, muss unter Umständen das `:Z` in der `docker-compose.yaml` entfernt werden (<todo>).
+**Hinweis:** Sollte es Probleme geben, muss unter Umständen das `:Z` in der `docker-compose.yaml` entfernt werden (https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/docker-compose.yaml#L22).
 
 Danach starten alle Container wie gewohnt. Es kann jedoch sein, dass der Server mehrfach abstürzt, da dieser auf die Verfügbarkeit der Datenbank warten muss.
 
