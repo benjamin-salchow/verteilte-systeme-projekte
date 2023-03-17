@@ -1,7 +1,7 @@
 const axios = require('axios')
 
 // Constants
-const SERVER = process.env.SERVER || "localhost";
+const SERVER = process.env.SERVER || "127.0.0.1";
 
 function postRandomNumberToServer() {
     // Use of defined client entry point as POST!

@@ -5,7 +5,7 @@ const net = require('net');
 const client = new net.Socket();
 
 // Constants
-const SERVER = process.env.SERVER || "localhost";
+const SERVER = process.env.SERVER || "127.0.0.1";
 
 // Use created client to connect to server:
 client.connect(9233, SERVER, (error) => {
