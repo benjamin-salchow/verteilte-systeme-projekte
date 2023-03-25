@@ -29,6 +29,7 @@ Dies bedeutet, dass das Löschen, Anlegen oder Ändern von Dateien bzw. Verzeich
 3. Entfernen der nodemon dependency im Container
    * https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/server/Dockerfile#L10
 
+**Hinweis:** `nodemon` hat unter Windows und Mac Probleme automatisch Dateisystemänderungen zu erkennen. Dadurch muss der Parameter `- L` verewndet werden (seihe https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/docker-compose.yaml#L18). Das sorgt dafür, dass mittels polling der Ordner überwacht wird.
 
 ### Static Files
 
