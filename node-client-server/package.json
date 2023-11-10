@@ -9,7 +9,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "axios": "^0.21",
+    "axios": "^1.6",
     "express": "^4.17"
   }
 }
