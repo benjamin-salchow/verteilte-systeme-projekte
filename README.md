@@ -165,3 +165,13 @@ Einfaches Beispiel mit einem MQTT-Server auf Mosquitto Basis und einer Java Spri
 [- Link Ordner->](java-spring-mqtt/)
 
 **Hinweis:** Ein Java-Beispiel hat noch keinen Client, daher muss dieser noch implementiert werden.
+
+### Rust
+
+#### Client-Server Webserver mit Datenbank
+
+Erweiterung des `Client-Server Webserver`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](rust-client-server-with-database/README.md)
+
+[- Link Ordner->](rust-client-server-with-database/)

@@ -1,0 +1,24 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+[build]
+# this crt-static is required for the alpine container!
+rustflags='-C target-feature=-crt-static'
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4"
+actix-session = {version = "0.9", features = ["cookie-session"]}
+actix-files = "0.6"
+log = "0.4"
+env_logger = "0.11"
+dotenvy = "0.15.7"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = "0.8.5"
+mysql = "24"
+mime = "0.3.17"
