@@ -175,3 +175,14 @@ Erweiterung des `Client-Server Webserver`-Beispiels mit einer SQL-Datenbank. Ver
 [- Link Anleitung ->](rust-client-server-with-database/README.md)
 
 [- Link Ordner->](rust-client-server-with-database/)
+
+
+### Python
+
+#### Client-Server Webserver mit Datenbank
+
+Erweiterung des `Client-Server Webserver`-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](python-client-server-with-database/README.md)
+
+[- Link Ordner->](python-client-server-with-database/)
