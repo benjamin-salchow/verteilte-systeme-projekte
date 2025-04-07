@@ -8,6 +8,6 @@
     "start": "node client.js"
   },
   "dependencies": {
-    "axios": "^1.7"
+    "axios": "^1.8"
   }
 }
