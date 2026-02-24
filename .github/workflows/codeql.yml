@@ -11,9 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  analyze:
+  analyze-compiled:
     if: ${{ github.event.repository.private == false }}
-    name: Analyze (${{ matrix.language }})
+    name: Analyze Compiled (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -22,28 +22,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - language: c-cpp
-            build_mode: manual
-          - language: csharp
-            build_mode: manual
-          - language: go
-            build_mode: manual
-          - language: java-kotlin
-            build_mode: manual
-          - language: javascript-typescript
-            build_mode: none
-          - language: python
-            build_mode: none
+        language: [c-cpp, csharp, go, java-kotlin]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - name: Initialize CodeQL (manual build)
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build_mode }}
+          build-mode: manual
 
       - name: Build C/C++
         if: ${{ matrix.language == 'c-cpp' }}
@@ -73,4 +61,29 @@ jobs:
           mvn -f java-spring-mqtt/pom.xml -DskipTests package
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
+
+  analyze-interpreted:
+    if: ${{ github.event.repository.private == false }}
+    name: Analyze Interpreted (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, python]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL (no build)
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
