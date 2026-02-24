@@ -16,7 +16,7 @@ Der Server wird mit der Standardkonfiguration gestartet und öffnet Port 1883 TC
 
 Der Node startet einen Thread und verbindet sich mit den MQTT Server.
 
-Darüber hinaus werden noch Pfade (Zurgriffspunkte) bereitgestellt:
+Darüber hinaus werden noch Pfade (Zugriffspunkte) bereitgestellt:
 
  * GET http://localhost:8080/
    * Allgemeiner Einstiegspunkt
@@ -87,16 +87,16 @@ node_1        | Publishing message: My message:33
 
 ```
 
-Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um beide Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
 Stopping java-spring-mqtt_node_1       ... 
 Stopping java-spring-mqtt_mqttserver_1 ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Killing java-spring-mqtt_node_1        ... done
 Killing java-spring-mqtt_mqttserver_1  ... done
 ```
@@ -119,7 +119,7 @@ Die `pom.xml`-Datei beschreibt, welche Abhängigkeiten das Projekt hat. Sollte m
    * Getting Started: https://spring.io/guides/gs/spring-boot/
    * Spring Boot Tutorial: https://spring.io/guides/gs/spring-boot/#initial
    * Spring Boot Docker: https://spring.io/guides/gs/spring-boot-docker/
-   * Spring Gudies: https://spring.io/guides
+   * Spring Guides: https://spring.io/guides
  * MQTT
    * Webseite: https://www.eclipse.org/paho/clients/java/
    * JavaDoc: https://www.eclipse.org/paho/files/javadoc/index.html

@@ -2,7 +2,7 @@
 
 ## Allgemein
 
-In diesem Beispiel wird ein PHP-Webserver im Container (mittels Apache) gestartet und Zugriffspunkte (Pfäde) definiert. Darüber hinaus wird ein 'mariaDB'-Datenbankcontainer angelegt, welcher vom Webserver verwendet wird.
+In diesem Beispiel wird ein PHP-Webserver im Container (mittels Apache) gestartet und Zugriffspunkte (Pfade) definiert. Darüber hinaus wird ein 'MariaDB'-Datenbankcontainer angelegt, welcher vom Webserver verwendet wird.
 
 Bitte schaue zuerst das Beispiel `php-client-server` an: [- php-client-server-Beispiel ->](../php-client-server/README.md)
 
@@ -110,8 +110,8 @@ In diesem Ordner können mit dem Terminal und folgendem Befehl:
 docker-compose up --build
 ```
 
-automatisch der "Server"-Container und der "Client"-Container gestartet werden.
-Darüber hinaus werden die beiden Container `server` und `client` mittels dem `--build` flag auch neu gebaut, damit aktuelle Änderungen enthalten sind.
+automatisch der "Server"-Container, der Datenbank-Container und phpMyAdmin gestartet werden.
+Darüber hinaus werden die Container mittels des `--build`-Flags auch neu gebaut, damit aktuelle Änderungen enthalten sind.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -159,9 +159,9 @@ meinecooledb_1  | 2021-05-24 19:42:52 0 [Note] InnoDB: Buffer pool(s) load compl
 
 Dabei wird auch im Log ausgegeben, wenn die `database.sql` geladen wird: `meinecooledb_1  | 2021-05-24 19:42:50+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/database.sql`.
 
-Um alle Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um alle Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -169,13 +169,13 @@ Gracefully stopping... (press Ctrl+C again to force)
 Stopping php-client-server-with-database_server_1       ...
 Stopping php-client-server-with-database_phpmyadmin_1   ...
 Stopping php-client-server-with-database_meinecooledb_1 ...
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Stopping php-client-server-with-database_server_1       ... done
 Stopping php-client-server-with-database_phpmyadmin_1   ... done
 Stopping php-client-server-with-database_meinecooledb_1 ... done
 ```
 
-**Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird, damit alle Änderungen im localen `src`-Ordner auch in den Container integriert werden.
+**Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird, damit alle Änderungen im lokalen `src`-Ordner auch in den Container integriert werden.
 
 
 ## Informationen

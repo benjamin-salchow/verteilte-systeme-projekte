@@ -44,7 +44,7 @@ In diesem Verzeichnis können mittels:
 ```sh
 npm install
 ```
-alle definierten Bibliotheken im `package.js` heruntergeladen werden.
+alle definierten Bibliotheken in der `package.json` heruntergeladen werden.
 
 
 Mit folgenden Befehlen kann der Server lokal ausgeführt werden:
@@ -64,7 +64,7 @@ docker-compose up --build
 ```
 
 automatisch der "Server"-Container gestartet werden.
-Darüber hinaus wird der Container `server` mittels dem `--build` flag auch neu gebaut, damit aktuelle Änderungen enthalten sind.
+Darüber hinaus wird der Container `server` mittels des `--build`-Flags auch neu gebaut, damit aktuelle Änderungen enthalten sind.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -98,15 +98,15 @@ server_1  | Running on http://0.0.0.0:8080
 server_1  | Open the following URL with your Browser: http://localhost:8080/
 ```
 
-Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um beide Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
 Stopping node-p2p_server_1   ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Stopping node-p2p_server_1 ... done
 ```
 
@@ -121,4 +121,3 @@ Stopping node-p2p_server_1 ... done
    * Dokumentation: https://peerjs.com/docs.html#api
    * Server: https://github.com/peers/peerjs-server
    * Node / Client: https://github.com/peers/peerjs
-

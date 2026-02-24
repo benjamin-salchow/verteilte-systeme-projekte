@@ -46,19 +46,19 @@ server_1  | [Mon May 24 18:25:37.736232 2021] [mpm_prefork:notice] [pid 1] AH001
 server_1  | [Mon May 24 18:25:37.736287 2021] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
 ```
 
-Um den Container zu stoppen, kann diese mittels [strg] + [c] beendet werden.
+Um den Container zu stoppen, kann diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
 Stopping php-client-server_server_1 ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 php-client-server_server_1  ... done
 ```
 
-**Wichtig:** der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird, damit alle Änderungen im localen `src`-Ordner auch in den Container integriert werden.
+**Wichtig:** der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird, damit alle Änderungen im lokalen `src`-Ordner auch in den Container integriert werden.
 
 
 ## Informationen

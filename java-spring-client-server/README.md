@@ -2,13 +2,13 @@
 
 ## Allgemein
 
-In diesem Beispiel werden ein Java Webserver (mittels Spring-Boot) gestartet und Zugriffspunkte (Pfäde) definiert.
+In diesem Beispiel werden ein Java Webserver (mittels Spring-Boot) gestartet und Zugriffspunkte (Pfade) definiert.
 
 **Hinweis:** Aufgrund der Komplexität von Java-Projekten könnte ein Node.js Projekt einfacher sein. Dies dient als schneller Startpunkt, um bekanntes Web-Framework für Java zu verwenden. Alternativ ist Java EE (z.B. Tomcat) möglich. Jedoch ist dessen Aufbau weitaus komplexer als Spring-Boot.
 
 ### Server
 
-Nach dem Start des Servers werden folgende Pfade (Zurgriffspunkte) bereitgestellt:
+Nach dem Start des Servers werden folgende Pfade (Zugriffspunkte) bereitgestellt:
 
  * GET http://localhost:8080/
    * Allgemeiner Einstiegspunkt
@@ -74,18 +74,16 @@ server_1  | 2020-03-16 20:46:51.423  INFO 1 --- [nio-8080-exec-1] o.s.web.servle
 server_1  | Got a request and serving 'Hello World
 ```
 
-Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um beide Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
-Stopping node-client-server_client_1 ... 
-Stopping node-client-server_server_1 ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
-Killing node-client-server_client_1  ... done
-Killing node-client-server_server_1  ... done
+Stopping java-spring-client-server_server_1 ... 
+# wenn nochmal [Strg] + [c] gedrückt wird:
+Killing java-spring-client-server_server_1  ... done
 ```
 
 **Wichtig:** Der Parameter `--build` sorgt dafür, dass bei jedem Aufruf von `docker-compose up` der Container neu gebaut wird. Jedoch muss die Java-Anwendung mittels `./gradlew build` gebaut werden.
@@ -114,7 +112,6 @@ Die `pom.xml`-Datei beschreibt, welche Abhängigkeiten das Projekt hat. Sollte m
    * Getting Started: https://spring.io/guides/gs/spring-boot/
    * Spring Boot Tutorial: https://spring.io/guides/gs/spring-boot/#initial
    * Spring Boot Docker: https://spring.io/guides/gs/spring-boot-docker/
-   * Spring Gudies: https://spring.io/guides
+   * Spring Guides: https://spring.io/guides
   
-
 

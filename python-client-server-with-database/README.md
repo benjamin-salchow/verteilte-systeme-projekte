@@ -2,7 +2,7 @@
 
 ## Allgemein
 
-In diesem Beispiel werden ein Python Webserver (mittels Flask) gestartet und Zugriffspunkte (Pfäde) definiert. Darüber hinaus wird ein 'mariaDB'-Datenbankcontainer angelegt, welcher vom Webserver verwendet wird.
+In diesem Beispiel werden ein Python Webserver (mittels Flask) gestartet und Zugriffspunkte (Pfade) definiert. Darüber hinaus wird ein 'MariaDB'-Datenbankcontainer angelegt, welcher vom Webserver verwendet wird.
 
 ![Screenshot](screenshot.png)
 
@@ -78,7 +78,7 @@ Der Client ist im Webbrowser, jedoch kann wie im `node-client-server-extended`-B
 
 **Hinweis:** Beachte, dass die `docker-compose.yml` im Hauptverzeichnis des Projektes liegt. Der Ordner `server` beinhaltet den Python Flask Server Code, welcher mittels einer eigenen `Dockerfile` gebaut wird. Die Container sind unabhängig und unterscheiden sich. Innerhalb der `docker-compose.yml` wird unter `build` der Ordner angegeben, welcher die `Dockerfile` beinhaltet.
 
-In den Verzeichnissen `server` können mittels:
+Im Verzeichnis `server` können mit:
 ```sh
 pip3 install
 
@@ -104,8 +104,8 @@ In diesem Ordner können mit dem Terminal und folgendem Befehl:
 docker-compose up --build
 ```
 
-automatisch der "Server"-Container und der "Client"-Container gestartet werden.
-Darüber hinaus werden die Container `server` und `db` usw. mittels dem `--build` flag auch neu gebaut, damit aktuelle Änderungen enthalten sind.
+automatisch der "Server"-Container, der Datenbank-Container und phpMyAdmin gestartet werden.
+Darüber hinaus werden die Container mittels des `--build`-Flags auch neu gebaut, damit aktuelle Änderungen enthalten sind.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -128,9 +128,9 @@ server_1        | INFO:werkzeug:Press CTRL+C to quit
 
 Dabei wird auch im Log ausgegeben, wenn die `database.sql` geladen wird: `meinecooledb_1  | 2020-04-10 13:38:59+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/database.sql`.
 
-Um alle Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um alle Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -138,7 +138,7 @@ Gracefully stopping... (press Ctrl+C again to force)
 Stopping python-client-server-with-database_server_1       ... 
 Stopping python-client-server-with-database_meinecooledb_1 ... 
 Stopping python-client-server-with-database_phpmyadmin_1   ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Stopping python-client-server-with-database_server_1       ... done
 Stopping python-client-server-with-database_meinecooledb_1 ... done
 Stopping python-client-server-with-database_phpmyadmin_1   ... done

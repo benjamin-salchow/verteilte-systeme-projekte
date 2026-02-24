@@ -2,15 +2,15 @@
 
 ## Allgemein
 
-In diesem Beispiel wird ein Node.js Webserver (mittels Express) gestartet und Zugriffspunkte (Pfäde) definiert. Der Client macht eine Anfrage an den Server alle 3 Sekunden.
+In diesem Beispiel wird ein Node.js Webserver (mittels Express) gestartet und Zugriffspunkte (Pfade) definiert. Der Client macht eine Anfrage an den Server alle 3 Sekunden.
 
 Im Vergleich zum normalen Node.js Client - (Web-)Server Beispiel laufen der Client und der Server in zwei getrennten Containern, die auch verschiedene `Dockerfile`s benutzen. Das bedeutet, dass der Client-Container nur den Client beinhaltet und der Server nur alle Dateien, die für den Server notwendig sind.
 
-Darüber hinaus beinhaltet die Webseite in `server/public/index.html` zwei Beispiele, wie man über eine Webseite den Server aufrufen kann. Jeder Aufruf im Ordner `public` wird über `https://localhost:8080/static/` + `<Dateiname>` an den Client übertragen. Da `index.html` immer aufgerufen wird, wenn kein Dateiname angegeben ist, mus dies nicht explizit angegeben werden.
+Darüber hinaus beinhaltet die Webseite in `server/public/index.html` zwei Beispiele, wie man über eine Webseite den Server aufrufen kann. Jeder Aufruf im Ordner `public` wird über `https://localhost:8080/static/` + `<Dateiname>` an den Client übertragen. Da `index.html` immer aufgerufen wird, wenn kein Dateiname angegeben ist, muss dies nicht explizit angegeben werden.
 
 ### Server
 
-Nach dem Start des Servers werden folgende Pfade (Zurgriffspunkte) bereitgestellt:
+Nach dem Start des Servers werden folgende Pfade (Zugriffspunkte) bereitgestellt:
 
 Zugriffspunkte, die sich geändert haben:
  * GET http://localhost:8080/
@@ -47,13 +47,13 @@ Nach dem Start des Clients wird alle 3 Sekunden ein Request (Anfrage) gegen http
 ```
 ## Installation und lokale Ausführung
 
-**Hinweis:** Beachte, dass die `docker-compose.yml` im Hauptverzeichnis des Projektes liegt. Die Ordnerstruktur enthält einen Ordner `client` und einen Ordner `server`, welche jeweils die benötigten Dateien sowie eine eigene `Dockerfile` haben, welche die Container beschreiben. Die Container sind unabhängig und unterscheiden sich. Innerhalb der `docker-compose.yml` wird unter `build` der Ordner angegeben, welche die `Dockerfile` beinhaltet.
+**Hinweis:** Beachte, dass die `docker-compose.yml` im Hauptverzeichnis des Projektes liegt. Die Ordnerstruktur enthält einen Ordner `client` und einen Ordner `server`, welche jeweils die benötigten Dateien sowie eine eigene `Dockerfile` haben, die den jeweiligen Container beschreibt. Die Container sind unabhängig und unterscheiden sich. Innerhalb der `docker-compose.yml` wird unter `build` der Ordner angegeben, welcher die `Dockerfile` beinhaltet.
 
-In den Verzeichnissen `server` und `client` können mittels:
+In den Verzeichnissen `server` und `client` können mit:
 ```sh
 npm install
 ```
-alle definierten Bibliotheken im `package.js` heruntergeladen werden.
+alle definierten Bibliotheken in der `package.json` heruntergeladen werden.
 
 
 Mit folgenden Befehlen können der Server und Client lokal ausgeführt werden:
@@ -76,7 +76,7 @@ docker-compose up --build
 ```
 
 automatisch der "Server"-Container und der "Client"-Container gestartet werden.
-Darüber hinaus werden die beiden Container `server` und `client` mittels dem `--build` flag auch neu gebaut, damit aktuelle Änderungen enthalten sind.
+Darüber hinaus werden die beiden Container `server` und `client` mittels des `--build`-Flags auch neu gebaut, damit aktuelle Änderungen enthalten sind.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -94,16 +94,16 @@ client_1  | statusCode: 200
 client_1  | { message: 'I got your message: Random Number: 0.1115857723446132' }
 ```
 
-Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um beide Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
 Gracefully stopping... (press Ctrl+C again to force)
 Stopping node-client-server-extended_client_1 ... 
 Stopping node-client-server-extended_server_1 ... 
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Stopping node-client-server-extended_client_1 ... done
 Stopping node-client-server-extended_server_1 ... done
 ```

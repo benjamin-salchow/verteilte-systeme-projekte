@@ -34,7 +34,7 @@ In diesem Verzeichnis können mittels:
 ```sh
 npm install
 ```
-alle definierten Bibliotheken im `package.js` heruntergeladen und installiert werden.
+alle definierten Bibliotheken in der `package.json` heruntergeladen und installiert werden.
 
 
 Mit folgenden Befehlen kann der Client lokal ausgeführt werden:
@@ -97,9 +97,9 @@ node_2        | Received:Hello mqtt from Node:5df38ebc8279
 node_1        | Received:Hello mqtt from Node:5df38ebc8279
 ```
 
-Um beide Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um beide Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh

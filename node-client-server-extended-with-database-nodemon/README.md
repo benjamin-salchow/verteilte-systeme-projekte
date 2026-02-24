@@ -44,7 +44,7 @@ In den Verzeichnisen `server` müssen vor dem ersten Start mittels:
 ```sh
 npm install
 ```
-alle definierten Bibliotheken im `package.js` heruntergeladen werden. Sonst kann der Container nicht gestartet werden.
+alle definierten Bibliotheken in der `package.json` heruntergeladen werden. Sonst kann der Container nicht gestartet werden.
 
 **Hinweis:** nodemon muss nicht lokal installiert werden. Es reicht vollkommen aus, dass dies nur im Container läuft. Dort wird es in folgender Zeile (https://github.com/benjamin-salchow/verteilte-systeme-projekte/blob/114cf625e31fa034c5c00e91ee12afd119f169d6/node-client-server-extended-with-database-nodemon/server/Dockerfile#L10) installiert.
 
@@ -68,9 +68,9 @@ server_1        | [nodemon] starting `node server.js`
 
 Dabei wird auch im Log ausgegeben, wenn die `database.sql` geladen wird: `meinecooledb_1  | 2020-04-10 13:38:59+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/database.sql`.
 
-Um alle Container zu stoppen, können diese mittels [strg] + [c] beendet werden.
+Um alle Container zu stoppen, können diese mittels [Strg] + [c] beendet werden.
 
-**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
+**Hinweis:** Sollte der Container nicht herunterfahren, dann kann [Strg] + [c] nochmals gedrückt werden, um dies zu beschleunigen.
 
 Der Output sieht wie folgt aus:
 ```sh
@@ -78,7 +78,7 @@ Gracefully stopping... (press Ctrl+C again to force)
 Stopping node-client-server-extended-with-database_server_1       ...
 Stopping node-client-server-extended-with-database_phpmyadmin_1   ...
 Stopping node-client-server-extended-with-database_meinecooledb_1 ...
-# wenn nochmal [strg] + [c] gedrückt wird:
+# wenn nochmal [Strg] + [c] gedrückt wird:
 Stopping node-client-server-extended-with-database_server_1       ... done
 Stopping node-client-server-extended-with-database_phpmyadmin_1   ... done
 Stopping node-client-server-extended-with-database_meinecooledb_1 ... done
