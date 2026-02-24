@@ -2,14 +2,17 @@ name: CodeQL
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main", "master"]
   pull_request:
     branches: ["**"]
-  schedule:
-    - cron: "23 3 * * 1"
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
+    if: ${{ github.event.repository.private == false }}
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
@@ -19,13 +22,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language:
-          - c-cpp
-          - csharp
-          - go
-          - java-kotlin
-          - javascript-typescript
-          - python
+        include:
+          - language: c-cpp
+            build-mode: manual
+          - language: csharp
+            build-mode: manual
+          - language: go
+            build-mode: manual
+          - language: java-kotlin
+            build-mode: manual
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,9 +43,34 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      - name: Build C/C++
+        if: ${{ matrix.language == 'c-cpp' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake pkg-config libmariadb-dev nlohmann-json3-dev
+          cmake -S cplusplus-client-server-with-database/server -B cplusplus-client-server-with-database/server/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build cplusplus-client-server-with-database/server/build --target server -j"$(nproc)"
+
+      - name: Build C#
+        if: ${{ matrix.language == 'csharp' }}
+        run: |
+          dotnet restore csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj
+          dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release --no-restore
+
+      - name: Build Go
+        if: ${{ matrix.language == 'go' }}
+        run: |
+          cd golang-client-server-with-database/server
+          go build ./...
+
+      - name: Build Java
+        if: ${{ matrix.language == 'java-kotlin' }}
+        run: |
+          mvn -f java-spring-client-server/pom.xml -DskipTests package
+          mvn -f java-spring-client-server-with-database/server/pom.xml -DskipTests package
+          mvn -f java-spring-mqtt/pom.xml -DskipTests package
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
