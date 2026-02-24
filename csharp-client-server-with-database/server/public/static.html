@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <title>Static Files Example</title>
+    <!-- The following is bootstrap: https://getbootstrap.com/docs/4.3/getting-started/introduction/ -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+</head>
+
+<body>
+
+    <!-- The container is for the theme / deisgn -->
+    <main role="main" class="container">
+
+
+        <h1>Static Files</h1>
+        <p>This is a sample for using other static files like images or referenced css-files.</p>
+        <hr>
+        <!-- Load images from img folder like in this code -->
+        <h2>Images</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <figure class="figure">
+                        <!-- See <img src='' how to use it -->
+                        <img src="img/mogli.png" class="rounded mx-auto d-block" alt="Mogli">
+                        <figcaption class="figure-caption">Mogli</figcaption>
+                    </figure>
+                </div>
+                <div class="col-sm">
+                    <figure class="figure">
+                        <img src="img/marie.png" class="rounded mx-auto d-block" alt="Marie">
+                        <figcaption class="figure-caption">Marie</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <!-- How to use custom CSS -->
+        <h2>CSS</h2>
+        <p>This is custom CSS that is definied in the file:</p>
+        <!-- Please keep in mind that 'my-own-css' is imported here in the header as '<link rel="stylesheet" type="text/css" href="css/custom.css">' -->
+        <p class="my-own-css">/static/css/custom.css</p>
+        <p>Use the relative path from this file to it as link:</p>
+        <p class="my-own-css">css/custom.css</p>
+        <hr>
+        <!-- Link to main page: -->
+        <h2>Main Page</h2>
+        <p>Follow the link to get back to the main page:</p>
+        <a href="index.html">index.html</a>
+    </main><!-- /.container -->
+
+</body>
+
+</html>

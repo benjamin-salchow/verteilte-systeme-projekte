@@ -202,3 +202,13 @@ Gleiches Beispiel wie bei Python, aber mit einem Go-Server. Verwaltung der Daten
 [- Link Anleitung ->](golang-client-server-with-database/README.md)
 
 [- Link Ordner->](golang-client-server-with-database/)
+
+### C# / .NET
+
+#### Client-Server Webserver mit Datenbank
+
+Gleiches Beispiel wie bei Python, aber mit einem C#/.NET-Server. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](csharp-client-server-with-database/README.md)
+
+[- Link Ordner->](csharp-client-server-with-database/)
