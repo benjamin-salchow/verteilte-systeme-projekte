@@ -3,14 +3,9 @@ name: Rust Security
 on:
   push:
     branches: ["main", "master"]
-    paths:
-      - "rust-client-server-with-database/server/**"
-      - ".github/workflows/rust-security.yml"
   pull_request:
     branches: ["**"]
-    paths:
-      - "rust-client-server-with-database/server/**"
-      - ".github/workflows/rust-security.yml"
+  workflow_dispatch:
 
 concurrency:
   group: rust-security-${{ github.ref }}
