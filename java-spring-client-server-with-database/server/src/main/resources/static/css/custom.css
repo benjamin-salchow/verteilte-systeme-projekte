@@ -1,0 +1,10 @@
+.my-own-css {
+    font-weight: 100; 
+    font-size: 40px;
+    font-family: Helvetica,Arial,sans-serif;
+    background: -webkit-linear-gradient(#0398fc, #002f4f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+}

@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  server:
+    build: server
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_HOSTNAME: meinecooledb
+      PORT: 8080
+    depends_on:
+      - meinecooledb
+  meinecooledb:
+    build: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8085:80
+    environment:
+      PMA_HOST: meinecooledb

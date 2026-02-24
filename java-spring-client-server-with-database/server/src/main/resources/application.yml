@@ -1,0 +1,15 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOSTNAME:localhost}:3306/${MYSQL_DATABASE:exampledb}
+    username: ${MYSQL_USER:exampleuser}
+    password: ${MYSQL_PASSWORD:examplepass}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      initializationFailTimeout: 0
+
+logging:
+  level:
+    root: INFO

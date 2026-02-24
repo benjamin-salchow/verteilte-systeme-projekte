@@ -152,9 +152,17 @@ Die Pakete kann man z.B. im Maven Repository unter https://mvnrepository.com/ su
 
 Einfacher Webserver (HTTP).
 
-[- Link Anleitung ->](java-spring-server-client-docker/README.md)
+[- Link Anleitung ->](java-spring-client-server/README.md)
 
-[- Link Ordner->](java-spring-server-client-docker/)
+[- Link Ordner->](java-spring-client-server/)
+
+#### Client-Server Webserver mit Datenbank
+
+Erweiterung des Java Spring Webserver-Beispiels mit einer SQL-Datenbank. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](java-spring-client-server-with-database/README.md)
+
+[- Link Ordner->](java-spring-client-server-with-database/)
 
 #### Message Oriented MQTT
 

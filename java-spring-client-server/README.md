@@ -46,9 +46,9 @@ automatisch der "Server"-Container  gestartet werden.
 Der Output sieht wie folgt aus:
 ```sh
 Successfully built e129baf9b757
-Successfully tagged java-spring-server-client-docker_server:latest
-Recreating java-spring-server-client-docker_server_1 ... done
-Attaching to java-spring-server-client-docker_server_1
+Successfully tagged java-spring-client-server_server:latest
+Recreating java-spring-client-server_server_1 ... done
+Attaching to java-spring-client-server_server_1
 server_1  | 
 server_1  |   .   ____          _            __ _ _
 server_1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
