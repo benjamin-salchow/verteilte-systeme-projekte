@@ -186,3 +186,11 @@ Erweiterung des `Client-Server Webserver`-Beispiels mit einer SQL-Datenbank. Ver
 [- Link Anleitung ->](python-client-server-with-database/README.md)
 
 [- Link Ordner->](python-client-server-with-database/)
+
+#### Client-Server Webserver mit Datenbank (Go)
+
+Gleiches Beispiel wie bei Python, aber mit einem Go-Server. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](golang-client-server-with-database/README.md)
+
+[- Link Ordner->](golang-client-server-with-database/)
