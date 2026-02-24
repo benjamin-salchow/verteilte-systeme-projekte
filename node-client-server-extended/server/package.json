@@ -9,6 +9,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.22"
+    "express": "^5.2"
   }
 }

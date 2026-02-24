@@ -9,6 +9,6 @@
   "author": "First Last <first.last@example.com>",
   "license": "MIT",
   "dependencies": {
-    "mqtt": "^4.2.0"
+    "mqtt": "^5.15.0"
   }
 }
