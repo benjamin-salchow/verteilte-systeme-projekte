@@ -53,6 +53,14 @@ jobs:
           cd golang-client-server-with-database/server
           go build ./...
 
+      - name: Set up Java 21
+        if: ${{ matrix.language == 'java-kotlin' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
       - name: Build Java
         if: ${{ matrix.language == 'java-kotlin' }}
         run: |

@@ -1,0 +1,43 @@
+name: Rust Security
+
+on:
+  push:
+    branches: ["main", "master"]
+    paths:
+      - "rust-client-server-with-database/server/**"
+      - ".github/workflows/rust-security.yml"
+  pull_request:
+    branches: ["**"]
+    paths:
+      - "rust-client-server-with-database/server/**"
+      - ".github/workflows/rust-security.yml"
+
+concurrency:
+  group: rust-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust-client-server-with-database/server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        uses: taiki-e/install-action@cargo-audit
+
+      - name: Install cargo-deny
+        uses: taiki-e/install-action@cargo-deny
+
+      - name: Cargo audit
+        run: cargo audit
+
+      - name: Cargo deny (advisories)
+        run: cargo deny check advisories
