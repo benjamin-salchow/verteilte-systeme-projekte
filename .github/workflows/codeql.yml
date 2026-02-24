@@ -64,9 +64,9 @@ jobs:
       - name: Build Java
         if: ${{ matrix.language == 'java-kotlin' }}
         run: |
-          mvn -f java-spring-client-server/pom.xml -DskipTests package
-          mvn -f java-spring-client-server-with-database/server/pom.xml -DskipTests package
-          mvn -f java-spring-mqtt/pom.xml -DskipTests package
+          mvn -f java-spring-client-server/pom.xml -Dmaven.test.skip=true package
+          mvn -f java-spring-client-server-with-database/server/pom.xml -Dmaven.test.skip=true package
+          mvn -f java-spring-mqtt/pom.xml -Dmaven.test.skip=true package
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
