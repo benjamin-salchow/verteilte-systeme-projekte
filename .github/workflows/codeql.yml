@@ -24,17 +24,17 @@ jobs:
       matrix:
         include:
           - language: c-cpp
-            build-mode: manual
+            build_mode: manual
           - language: csharp
-            build-mode: manual
+            build_mode: manual
           - language: go
-            build-mode: manual
+            build_mode: manual
           - language: java-kotlin
-            build-mode: manual
+            build_mode: manual
           - language: javascript-typescript
-            build-mode: none
+            build_mode: none
           - language: python
-            build-mode: none
+            build_mode: none
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+          build-mode: ${{ matrix.build_mode }}
 
       - name: Build C/C++
         if: ${{ matrix.language == 'c-cpp' }}
