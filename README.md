@@ -212,3 +212,13 @@ Gleiches Beispiel wie bei Python, aber mit einem C#/.NET-Server. Verwaltung der 
 [- Link Anleitung ->](csharp-client-server-with-database/README.md)
 
 [- Link Ordner->](csharp-client-server-with-database/)
+
+### C++
+
+#### Client-Server Webserver mit Datenbank
+
+Gleiches Beispiel wie bei Python, aber mit einem C++-Server. Verwaltung der Datenbank erfolgt mit dem Browser und AJAX.
+
+[- Link Anleitung ->](cplusplus-client-server-with-database/README.md)
+
+[- Link Ordner->](cplusplus-client-server-with-database/)

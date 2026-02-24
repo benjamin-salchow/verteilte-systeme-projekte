@@ -1,0 +1,37 @@
+name: C++ Compliance
+
+on:
+  push:
+    paths:
+      - "cplusplus-client-server-with-database/**"
+      - ".github/workflows/cplusplus-compliance.yml"
+  pull_request:
+    paths:
+      - "cplusplus-client-server-with-database/**"
+      - ".github/workflows/cplusplus-compliance.yml"
+
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run compliance checks
+        run: ./cplusplus-client-server-with-database/scripts/check_compliance.sh
+
+      - name: Build C++ server image
+        run: docker build -t cplusplus-server:ci ./cplusplus-client-server-with-database/server
+
+      - name: Generate SBOM (SPDX JSON)
+        uses: anchore/sbom-action@v0
+        with:
+          image: cplusplus-server:ci
+          format: spdx-json
+          output-file: cplusplus-server-sbom.spdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cplusplus-server-sbom
+          path: cplusplus-server-sbom.spdx.json
