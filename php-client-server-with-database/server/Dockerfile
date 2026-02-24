@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:8.5-apache
 
 # Install end anable required php extension (mysqli)
 RUN docker-php-ext-install mysqli
