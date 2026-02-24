@@ -1,3 +1,3 @@
 Flask==3.1.3
 #mysql-connector-python==9.1.0 # not working with mariaDB! -  Unknown collation: 'utf8mb4_0900_ai_ci'
-mariadb==1.1.10
+mariadb==1.1.14
