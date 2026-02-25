@@ -11,11 +11,11 @@ use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use std::{env, fmt};
 
-// for testing
+// Unit/integration tests for this module.
 #[cfg(test)]
 mod test;
 
-// Connection builder for MySQL driver
+// Creates a reusable MySQL connection configuration from environment values.
 fn get_conn_builder(
     db_user: String,
     db_password: String,
@@ -84,7 +84,7 @@ impl fmt::Display for ErrorResponse {
     }
 }
 
-// Define a custom error type that can wrap both serde_json::Error and mysql::Error
+// Unifies serialization and database errors so handler helpers can return one error type.
 #[derive(Debug)]
 enum CustomError {
     SerializationError(serde_json::Error),
@@ -194,9 +194,9 @@ async fn get_entries(pool: web::Data<Pool>) -> impl Responder {
 
 // Function to fetch all entries from table1
 async fn fetch_entries(pool: web::Data<Pool>) -> Result<Vec<Entry>, mysql::Error> {
-    // use the connection pool with try (on failure it will return mysql::Error)
+    // Pull a connection from the pool for this request.
     let mut conn = pool.get_conn()?;
-    // prepares the Vec<Entry> of all the results and returns it.
+    // Map raw SQL rows directly into the API response struct.
     let results = conn.query_map(
         "SELECT * FROM table1",
         |(task_id, title, description, created_at)| Entry {
@@ -231,6 +231,7 @@ async fn delete_entry_by_id(
     pool: web::Data<Pool>,
     id: i32,
 ) -> Result<HttpResponse, CustomError> {
+    // Each request uses a short-lived pooled connection.
     let mut conn = pool.get_conn()?;
     match conn.exec_drop(
         "DELETE FROM table1 WHERE task_id = :id",
@@ -286,6 +287,7 @@ async fn add_new_entry(
     pool: web::Data<Pool>,
     entry: EntryCreate,
 ) -> Result<HttpResponse, CustomError> {
+    // Insert uses named parameters to avoid SQL injection and keep queries readable.
     let mut conn = pool.get_conn()?;
     match conn.exec_drop(
         "INSERT INTO table1 (title, description, created_at) VALUES (:title, :description, CURRENT_TIMESTAMP)",
@@ -317,8 +319,7 @@ async fn add_new_entry(
 
 // ###################### DATABASE PART END ######################
 
-// Add some basic retry logic to try to connect to the DB
-// MySQL needs sometimes more time to boot.
+// Startup retry loop: in Docker-based setups, MySQL often becomes ready after the API.
 fn connect_db_with_retry(builder: mysql::OptsBuilder) -> Pool {
     let max_retries = 30;
     let wait_time = Duration::from_secs(5);
@@ -337,7 +338,12 @@ fn connect_db_with_retry(builder: mysql::OptsBuilder) -> Pool {
                     log::error!("Max retries reached for connecting to DB!");
                     panic!("Couldn't connect to DB")
                 }
-                log::error!("DB not ready! - {} - retry in 20 seconds - {} of {}", e.to_string(), retries, max_retries);
+                log::error!(
+                    "DB not ready! - {} - retry in 5 seconds - {} of {}",
+                    e.to_string(),
+                    retries,
+                    max_retries
+                );
                 std::thread::sleep(wait_time);
                 continue;
             }
@@ -353,7 +359,7 @@ async fn main() -> std::io::Result<()> {
     // initialize logger
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // Set up port for the server - if no port is specified 8080 will be used
+    // Resolve HTTP port from env (fallback to 8080 for local usage).
     let port = env::var_os("PORT")
         .map(|val| {
             val.into_string()
@@ -368,6 +374,7 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("setting up app from environment");
 
+    // Read DB config from environment to keep secrets/config out of source code.
     let db_user = env::var("MYSQL_USER").expect("MYSQL_USER is not set in .env file");
     let db_password = env::var("MYSQL_PASSWORD").expect("MYSQL_PASSWORD is not set in .env file");
     let db_host = env::var("MYSQL_HOSTNAME").expect("MYSQL_HOSTNAME is not set in .env file");
@@ -377,10 +384,10 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("initializing database connection");
 
-    // build connection with use of the given parameter
+    // Build the DB options and create one shared pool for all requests.
     let builder = get_conn_builder(db_user, db_password, db_host, db_port, db_name);
 
-    // create the DB connection pool
+    // App state for Actix handlers (`web::Data` is cheap to clone).
     let shared_data = web::Data::new(connect_db_with_retry(builder));
 
     log::info!("Starting HTTP server: go to http://localhost:8080");
@@ -401,9 +408,9 @@ async fn main() -> std::io::Result<()> {
             .service(add_entry)
             .service(delete_entry)
             .service(get_entries)
-            // If nothing before matches, move the request to static file
+            // Serve static frontend assets.
             .service(Files::new("/static/", "./public/").index_file("index.html"))
-            // redirect to landing page
+            // Redirect `/` to the frontend entry page.
             .service(
                 web::resource("/").route(web::get().to(|req: HttpRequest| async move {
                     log::info!("{req:?}");
@@ -413,7 +420,7 @@ async fn main() -> std::io::Result<()> {
                 })),
             )
     })
-    // bind to 0.0.0.0 to accept all incoming traffic (listening on all interfaces)
+    // Bind on all interfaces so container/host networking can reach the service.
     .bind(("0.0.0.0", port))?
     .run()
     .await

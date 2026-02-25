@@ -16,18 +16,22 @@ import (
 )
 
 const (
+	// Dockerized DB containers often need a short warm-up period.
 	maxRetries = 10
 	retryDelay = 5 * time.Second
 )
 
+// server bundles shared dependencies (here: the DB pool) for HTTP handlers.
 type server struct {
 	db *sql.DB
 }
 
+// client_post payload.
 type postBody struct {
 	PostContent string `json:"post_content"`
 }
 
+// database insert payload.
 type dbPostBody struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -41,6 +45,7 @@ type dbEntry struct {
 }
 
 func main() {
+	// Initialize DB first, so the server does not accept requests with a broken backend.
 	db, err := initDB()
 	if err != nil {
 		log.Fatalf("db init failed: %v", err)
@@ -49,6 +54,7 @@ func main() {
 
 	s := &server{db: db}
 
+	// Register API and static file routes in one central place.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", s.rootHandler)
 	mux.HandleFunc("/special_path", s.specialPathHandler)
@@ -74,6 +80,7 @@ func main() {
 }
 
 func initDB() (*sql.DB, error) {
+	// Read DB connection values from environment (provided via compose/.env).
 	host := os.Getenv("MYSQL_HOSTNAME")
 	user := os.Getenv("MYSQL_USER")
 	pass := os.Getenv("MYSQL_PASSWORD")
@@ -84,6 +91,7 @@ func initDB() (*sql.DB, error) {
 	var err error
 
 	for i := 1; i <= maxRetries; i++ {
+		// sql.Open validates DSN structure; Ping verifies the DB is actually reachable.
 		db, err = sql.Open("mysql", dsn)
 		if err == nil {
 			err = db.Ping()
@@ -100,6 +108,7 @@ func initDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("max retries exceeded: %w", err)
 	}
 
+	// Lightweight startup health check to fail fast on misconfigured DB/schema/network.
 	var solution int
 	if err := db.QueryRow("SELECT 1 + 1 AS solution").Scan(&solution); err != nil {
 		return nil, fmt.Errorf("db check query failed: %w", err)
@@ -117,6 +126,7 @@ func (s *server) rootHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	// Keep "/" as a clean entrypoint and redirect to static frontend.
 	http.Redirect(w, r, "/static/index.html", http.StatusFound)
 }
 
@@ -158,6 +168,7 @@ func (s *server) button1NameHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	name := ""
+	// Accept both JSON and HTML form payloads so frontend and API clients work identically.
 	if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
 		var payload map[string]string
 		if err := json.NewDecoder(r.Body).Decode(&payload); err == nil {
@@ -181,6 +192,7 @@ func (s *server) button2Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) databaseHandler(w http.ResponseWriter, r *http.Request) {
+	// Method switch keeps GET/POST behavior for one route explicit and testable.
 	switch r.Method {
 	case http.MethodGet:
 		s.handleDatabaseGet(w)
@@ -200,6 +212,7 @@ func (s *server) handleDatabaseGet(w http.ResponseWriter) {
 	defer rows.Close()
 
 	entries := make([]dbEntry, 0)
+	// Stream rows into typed DTOs before returning JSON.
 	for rows.Next() {
 		var e dbEntry
 		if err := rows.Scan(&e.TaskID, &e.Title, &e.Description, &e.CreatedAt); err != nil {
@@ -219,6 +232,7 @@ func (s *server) handleDatabasePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parameterized statement protects against SQL injection.
 	_, err := s.db.Exec(
 		"INSERT INTO table1 (title, description, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)",
 		payload.Title,
@@ -250,6 +264,7 @@ func (s *server) databaseDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// DELETE by numeric id only.
 	_, err = s.db.Exec("DELETE FROM table1 WHERE task_id = ?", id)
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
@@ -260,6 +275,7 @@ func (s *server) databaseDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeJSON(w http.ResponseWriter, status int, payload any) {
+	// Central JSON response helper keeps headers/status handling consistent.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(payload)

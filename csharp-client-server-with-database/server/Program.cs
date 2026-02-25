@@ -5,6 +5,7 @@ using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Keep JSON field names as declared in records to match frontend payloads exactly.
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = null;
@@ -12,6 +13,7 @@ builder.Services.Configure<JsonOptions>(options =>
 
 var app = builder.Build();
 
+// Read database settings from environment so deployment config stays outside source code.
 var dbConfig = new DbConfig(
     Host: Environment.GetEnvironmentVariable("MYSQL_HOSTNAME") ?? "localhost",
     User: Environment.GetEnvironmentVariable("MYSQL_USER") ?? "exampleuser",
@@ -20,8 +22,10 @@ var dbConfig = new DbConfig(
     Port: 3306
 );
 
+// Fail fast on startup if DB is unreachable/misconfigured.
 await EnsureDatabaseIsReachable(dbConfig);
 
+// Serve frontend assets from /public under /static.
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "public")),
@@ -51,6 +55,7 @@ app.MapPost("/client_post", async (HttpRequest request) =>
 
 app.MapPost("/button1_name", async (HttpRequest request) =>
 {
+    // Endpoint supports both form posts and JSON payloads.
     var name = await ExtractName(request);
     return Results.Ok(new { message = $"I got your message - Name is: {name}" });
 });
@@ -61,6 +66,7 @@ app.MapGet("/database", async () =>
 {
     try
     {
+        // Open a short-lived connection per request via pooled MySqlConnector connections.
         await using var conn = await OpenConnectionWithRetry(dbConfig);
         await using var cmd = new MySqlCommand("SELECT task_id, title, description, created_at FROM table1", conn);
         await using var reader = await cmd.ExecuteReaderAsync();
@@ -93,6 +99,7 @@ app.MapPost("/database", async (DatabaseInsertBody body) =>
 
     try
     {
+        // Parameterized SQL to avoid injection and keep values typed.
         await using var conn = await OpenConnectionWithRetry(dbConfig);
         await using var cmd = new MySqlCommand(
             "INSERT INTO table1 (title, description, created_at) VALUES (@title, @description, CURRENT_TIMESTAMP)", conn);
@@ -112,6 +119,7 @@ app.MapDelete("/database/{id:int}", async (int id) =>
 {
     try
     {
+        // Route constraint ensures only integer ids reach this handler.
         await using var conn = await OpenConnectionWithRetry(dbConfig);
         await using var cmd = new MySqlCommand("DELETE FROM table1 WHERE task_id = @id", conn);
         cmd.Parameters.AddWithValue("@id", id);
@@ -130,12 +138,14 @@ app.Run($"http://0.0.0.0:{port}");
 
 static async Task<string> ExtractName(HttpRequest request)
 {
+    // Browser form submit.
     if (request.HasFormContentType)
     {
         var form = await request.ReadFormAsync();
         return form.TryGetValue("name", out var nameFromForm) ? nameFromForm.ToString() : string.Empty;
     }
 
+    // API client JSON submit.
     if ((request.ContentType ?? string.Empty).Contains("application/json", StringComparison.OrdinalIgnoreCase))
     {
         var body = await request.ReadFromJsonAsync<ButtonNameBody>();
@@ -147,6 +157,7 @@ static async Task<string> ExtractName(HttpRequest request)
 
 static async Task EnsureDatabaseIsReachable(DbConfig cfg)
 {
+    // Simple deterministic startup check query.
     await using var conn = await OpenConnectionWithRetry(cfg);
     await using var cmd = new MySqlCommand("SELECT 1 + 1 AS solution", conn);
     var result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
@@ -169,6 +180,7 @@ static async Task<MySqlConnection> OpenConnectionWithRetry(DbConfig cfg)
     }.ConnectionString;
 
     Exception? lastException = null;
+    // Retry loop handles DB startup race in docker-compose.
     for (var i = 1; i <= 10; i++)
     {
         try

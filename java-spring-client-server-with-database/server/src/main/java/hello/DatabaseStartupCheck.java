@@ -19,11 +19,13 @@ public class DatabaseStartupCheck {
 
     @EventListener(ApplicationReadyEvent.class)
     public void verifyDatabaseConnection() {
+        // DB containers may need extra startup time; retry before failing the app.
         final int maxRetries = 10;
         final long retryDelayMs = 5000;
 
         for (int i = 1; i <= maxRetries; i++) {
             try {
+                // Deterministic sanity query to verify end-to-end DB connectivity.
                 Integer result = jdbcTemplate.queryForObject("SELECT 1 + 1 AS solution", Integer.class);
                 if (result != null && result == 2) {
                     LOG.info("Database connected and works");

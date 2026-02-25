@@ -19,6 +19,7 @@ using json = nlohmann::json;
 
 namespace {
 
+// Runtime DB configuration loaded from environment.
 struct DbConfig {
   std::string host;
   std::string user;
@@ -29,6 +30,7 @@ struct DbConfig {
 
 using MysqlPtr = std::unique_ptr<MYSQL, decltype(&mysql_close)>;
 
+// Collect DB settings from environment variables with local defaults.
 DbConfig load_db_config() {
   const char* host = std::getenv("MYSQL_HOSTNAME");
   const char* user = std::getenv("MYSQL_USER");
@@ -44,6 +46,7 @@ DbConfig load_db_config() {
   };
 }
 
+// Open DB connection with retry to handle startup race in docker-compose.
 MysqlPtr connect_db(const DbConfig& cfg, int retries = 10, int delay_seconds = 5) {
   for (int i = 1; i <= retries; ++i) {
     MYSQL* raw = mysql_init(nullptr);
@@ -68,6 +71,7 @@ MysqlPtr connect_db(const DbConfig& cfg, int retries = 10, int delay_seconds = 5
   throw std::runtime_error("Could not connect to DB after retries");
 }
 
+// Startup health check used before HTTP server starts accepting requests.
 void ensure_db_works(const DbConfig& cfg) {
   auto conn = connect_db(cfg);
   if (mysql_query(conn.get(), "SELECT 1 + 1 AS solution") != 0) {
@@ -93,6 +97,7 @@ bool db_insert(const DbConfig& cfg, const std::string& title, const std::string&
                std::string& err) {
   auto conn = connect_db(cfg);
 
+  // Use prepared statements and bound parameters to avoid SQL injection.
   MYSQL_STMT* stmt = mysql_stmt_init(conn.get());
   if (!stmt) {
     err = "mysql_stmt_init failed";
@@ -140,6 +145,7 @@ bool db_insert(const DbConfig& cfg, const std::string& title, const std::string&
 bool db_delete(const DbConfig& cfg, int id, std::string& err) {
   auto conn = connect_db(cfg);
 
+  // Delete by id via prepared statement for consistent typing and escaping.
   MYSQL_STMT* stmt = mysql_stmt_init(conn.get());
   if (!stmt) {
     err = "mysql_stmt_init failed";
@@ -194,6 +200,7 @@ std::optional<json> db_get_all(const DbConfig& cfg, std::string& err) {
 
   MYSQL_FIELD* fields = mysql_fetch_fields(res);
   unsigned int count = mysql_num_fields(res);
+  // Resolve column indices by name to avoid implicit positional assumptions.
   for (unsigned int i = 0; i < count; ++i) {
     std::string name = fields[i].name;
     if (name == "task_id") task_id_idx = static_cast<int>(i);
@@ -239,6 +246,7 @@ int main() {
 
   httplib::Server server;
 
+  // Serve frontend files from ./public under /static.
   if (!server.set_mount_point("/static", "./public")) {
     std::cerr << "Warning: Could not mount ./public on /static" << std::endl;
   }
@@ -275,6 +283,7 @@ int main() {
 
   server.Post(R"(/button1_name/?)", [](const httplib::Request& req, httplib::Response& res) {
     std::string name;
+    // Accept form-like params and JSON payloads for compatibility with different clients.
     if (req.has_param("name")) {
       name = req.get_param_value("name");
     } else {
@@ -311,6 +320,7 @@ int main() {
   server.Post("/database", [db_cfg](const httplib::Request& req, httplib::Response& res) {
     try {
       auto body = json::parse(req.body);
+      // Required fields validation at API boundary.
       if (!body.contains("title") || !body.contains("description") ||
           body["title"].get<std::string>().empty() || body["description"].get<std::string>().empty()) {
         res.status = 400;

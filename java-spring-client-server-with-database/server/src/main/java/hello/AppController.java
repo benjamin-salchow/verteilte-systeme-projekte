@@ -17,6 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @RestController
 public class AppController {
     private static final Logger LOG = LoggerFactory.getLogger(AppController.class);
+    // JdbcTemplate is shared and thread-safe for request-scoped DB operations.
     private final JdbcTemplate jdbcTemplate;
 
     public AppController(JdbcTemplate jdbcTemplate) {
@@ -25,6 +26,7 @@ public class AppController {
 
     @GetMapping("/")
     public ResponseEntity<Void> root() {
+        // Keep "/" as an entrypoint and redirect to the static frontend.
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", "/static/index.html")
                 .build();
@@ -51,6 +53,7 @@ public class AppController {
 
     @PostMapping(path = {"/button1_name", "/button1_name/"}, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Map<String, String>> button1NameForm(@RequestParam(value = "name", required = false) String name) {
+        // Browser form submit (application/x-www-form-urlencoded).
         if (name == null) {
             name = "";
         }
@@ -59,6 +62,7 @@ public class AppController {
 
     @PostMapping(path = {"/button1_name", "/button1_name/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> button1NameJson(@RequestBody(required = false) Map<String, String> jsonBody) {
+        // API client submit (application/json).
         String name = "";
         if (jsonBody != null && jsonBody.get("name") != null) {
             name = jsonBody.get("name");
@@ -75,6 +79,7 @@ public class AppController {
     @GetMapping("/database")
     public ResponseEntity<?> getDatabaseEntries() {
         try {
+            // Explicit projection keeps response shape stable and independent from ORM entities.
             List<Map<String, Object>> rows = jdbcTemplate.query("SELECT task_id, title, description, created_at FROM table1",
                     (rs, rowNum) -> {
                         Map<String, Object> row = new HashMap<>();
@@ -99,6 +104,7 @@ public class AppController {
         }
 
         try {
+            // Prepared placeholders prevent SQL injection and handle escaping correctly.
             jdbcTemplate.update("INSERT INTO table1 (title, description, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)",
                     body.get("title"), body.get("description"));
             return ResponseEntity.ok(Map.of("message", "Inserted"));
@@ -111,6 +117,7 @@ public class AppController {
     @DeleteMapping("/database/{id}")
     public ResponseEntity<Map<String, String>> deleteDatabaseEntry(@PathVariable int id) {
         try {
+            // Delete is id-based and returns a simple API-level status message.
             jdbcTemplate.update("DELETE FROM table1 WHERE task_id = ?", id);
             return ResponseEntity.ok(Map.of("message", "Deleted"));
         } catch (Exception ex) {
