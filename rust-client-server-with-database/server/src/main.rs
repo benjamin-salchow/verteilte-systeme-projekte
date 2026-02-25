@@ -163,7 +163,7 @@ async fn button1(params: web::Form<NameInfo>) -> impl Responder {
 #[get("/button2")]
 async fn button2() -> impl Responder {
     // Generate a random number
-    let random_number = rand::thread_rng().gen::<f64>();
+    let random_number = rand::rng().random::<f64>();
     // Print it out
     log::info!(
         "Send the following random number to the client: {} | Button2",
