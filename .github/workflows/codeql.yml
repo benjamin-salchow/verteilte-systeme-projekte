@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [c-cpp, go, rust]
+        language: [c-cpp, go]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -47,12 +47,6 @@ jobs:
           cd golang-client-server-with-database/server
           go build ./...
 
-      - name: Build Rust
-        if: ${{ matrix.language == 'rust' }}
-        run: |
-          cd rust-client-server-with-database/server
-          cargo build --release
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
@@ -67,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [csharp, java-kotlin, javascript-typescript, python]
+        language: [csharp, java-kotlin, javascript-typescript, python, rust]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
