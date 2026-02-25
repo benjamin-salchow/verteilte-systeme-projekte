@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [c-cpp, csharp, go, java-kotlin]
+        language: [c-cpp, go, rust]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -41,39 +41,24 @@ jobs:
           cmake -S cplusplus-client-server-with-database/server -B cplusplus-client-server-with-database/server/build -DCMAKE_BUILD_TYPE=Release
           cmake --build cplusplus-client-server-with-database/server/build --target server -j"$(nproc)"
 
-      - name: Build C#
-        if: ${{ matrix.language == 'csharp' }}
-        run: |
-          dotnet restore csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj
-          dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release --no-restore
-
       - name: Build Go
         if: ${{ matrix.language == 'go' }}
         run: |
           cd golang-client-server-with-database/server
           go build ./...
 
-      - name: Set up Java 21
-        if: ${{ matrix.language == 'java-kotlin' }}
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
-
-      - name: Build Java
-        if: ${{ matrix.language == 'java-kotlin' }}
+      - name: Build Rust
+        if: ${{ matrix.language == 'rust' }}
         run: |
-          mvn -f java-spring-client-server/pom.xml -Dmaven.test.skip=true package
-          mvn -f java-spring-client-server-with-database/server/pom.xml -Dmaven.test.skip=true package
-          mvn -f java-spring-mqtt/pom.xml -Dmaven.test.skip=true package
+          cd rust-client-server-with-database/server
+          cargo build --release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
-  analyze-interpreted:
+  analyze-buildless:
     if: ${{ github.event.repository.private == false }}
-    name: Analyze Interpreted (${{ matrix.language }})
+    name: Analyze Buildless (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -82,7 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [javascript-typescript, python]
+        language: [csharp, java-kotlin, javascript-typescript, python]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
