@@ -19,6 +19,6 @@ env_logger = "0.11"
 dotenvy = "0.15.7"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-rand = "0.9.2"
+rand = "0.10.0"
 mysql = "27"
 mime = "0.3.17"
