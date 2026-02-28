@@ -13,6 +13,10 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
     {
         // Skip database connection during tests
         builder.UseEnvironment("Testing");
+        
+        // Also set environment variable explicitly
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+        
         return base.CreateHost(builder);
     }
 }
