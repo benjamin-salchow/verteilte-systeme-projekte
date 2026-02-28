@@ -91,6 +91,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/cplusplus-client-server-with-database"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/cplusplus-client-server-with-database/db"
     schedule:
       interval: "weekly"
@@ -103,6 +109,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/csharp-client-server-with-database"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/csharp-client-server-with-database/db"
     schedule:
       interval: "weekly"
@@ -110,6 +122,12 @@ updates:
 
   - package-ecosystem: "docker"
     directory: "/csharp-client-server-with-database/server"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
+    directory: "/golang-client-server-with-database"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
@@ -128,6 +146,12 @@ updates:
 
   - package-ecosystem: "docker"
     directory: "/java-spring-client-server"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
+    directory: "/java-spring-client-server-with-database"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
@@ -157,6 +181,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/node-client-server-extended"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/node-client-server-extended/client"
     schedule:
       interval: "weekly"
@@ -169,6 +199,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/node-client-server-extended-with-database"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/node-client-server-extended-with-database/db"
     schedule:
       interval: "weekly"
@@ -176,6 +212,12 @@ updates:
 
   - package-ecosystem: "docker"
     directory: "/node-client-server-extended-with-database/server"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
+    directory: "/node-client-server-extended-with-database-nodemon"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
@@ -217,6 +259,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/php-client-server-with-database"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/php-client-server-with-database/db"
     schedule:
       interval: "weekly"
@@ -229,6 +277,12 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
+    directory: "/python-client-server-with-database"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
     directory: "/python-client-server-with-database/db"
     schedule:
       interval: "weekly"
@@ -236,6 +290,12 @@ updates:
 
   - package-ecosystem: "docker"
     directory: "/python-client-server-with-database/server"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "docker"
+    directory: "/rust-client-server-with-database"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
