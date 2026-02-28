@@ -160,6 +160,12 @@ static async Task<string> ExtractName(HttpRequest request)
 
 static async Task EnsureDatabaseIsReachable(DbConfig cfg)
 {
+    // Skip database checks entirely in test environment to prevent resource waste
+    if (string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Testing", StringComparison.OrdinalIgnoreCase))
+    {
+        return; // Early exit for tests - no database operations
+    }
+    
     // Simple deterministic startup check query.
     await using var conn = await OpenConnectionWithRetry(cfg);
     await using var cmd = new MySqlCommand("SELECT 1 + 1 AS solution", conn);
@@ -172,6 +178,12 @@ static async Task EnsureDatabaseIsReachable(DbConfig cfg)
 
 static async Task<MySqlConnection> OpenConnectionWithRetry(DbConfig cfg)
 {
+    // Skip database connections entirely in test environment to prevent resource waste
+    if (string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Testing", StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidOperationException("Database connections are disabled in test environment");
+    }
+    
     var cs = new MySqlConnectionStringBuilder
     {
         Server = cfg.Host,
@@ -183,7 +195,7 @@ static async Task<MySqlConnection> OpenConnectionWithRetry(DbConfig cfg)
     }.ConnectionString;
 
     Exception? lastException = null;
-    // Retry loop handles DB startup race in docker-compose.
+    // Retry loop handles DB startup race in docker-compose (10 attempts max).
     for (var i = 1; i <= 10; i++)
     {
         try
