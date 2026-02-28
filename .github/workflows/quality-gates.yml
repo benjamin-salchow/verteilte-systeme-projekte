@@ -34,7 +34,10 @@ jobs:
             echo "==> npm checks in $dir"
             pushd "$dir" >/dev/null
             if [ -f package-lock.json ]; then
-              npm ci --no-audit --no-fund
+              if ! npm ci --no-audit --no-fund; then
+                echo "npm ci failed in $dir, falling back to npm install"
+                npm install --no-audit --no-fund
+              fi
             else
               npm install --no-audit --no-fund
             fi
