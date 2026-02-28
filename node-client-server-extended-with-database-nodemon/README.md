@@ -35,6 +35,16 @@ Dies bedeutet, dass das Löschen, Anlegen oder Ändern von Dateien bzw. Verzeich
 
 Da das Verzeichnis vom Host eingebunden wird, werden Änderungen an den `Static Files` automatisch angewendet und können durch eine einfache Aktualisierung im Browser direkt angezeigt werden (`F5`).
 
+### Rate Limiting (für Studierende / Tests)
+
+Auch in der nodemon-Variante ist ein `express-rate-limit` aktiv, um einfache DoS-Szenarien abzufangen.
+Die Default-Werte sind für Lehrbetrieb bewusst sehr hoch gesetzt, damit Studierende bei Tests nicht hängen bleiben:
+
+* `RATE_LIMIT_WINDOW_MS=60000` (60 Sekunden)
+* `RATE_LIMIT_MAX=10000` (10.000 Requests pro 60 Sekunden und IP)
+
+Die Werte können in der `docker-compose.yaml` beim Service `server` angepasst werden.
+
 
 ## Installation und Ausführung
 

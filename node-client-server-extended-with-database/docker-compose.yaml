@@ -10,6 +10,8 @@ services:
       MYSQL_USER: exampleuser
       MYSQL_PASSWORD: examplepass
       MYSQL_HOSTNAME: meinecooledb
+      RATE_LIMIT_WINDOW_MS: 60000
+      RATE_LIMIT_MAX: 10000
     depends_on:
       - meinecooledb
   meinecooledb:

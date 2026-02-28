@@ -52,6 +52,16 @@ Zugriffspunkte vom `node-client-server-extended` sind enthalten, aber in dieser 
 Die `database.html` spielt dabei eine wichtige Rolle. In dieser Datei befindet sich `javascript` Code, welcher diese Anfragen stellt und auch in die HTML-Seite integriert (daher bitte die `database.html` anschauen).
 Dabei gibt es auch ein Error-Handling, welches über den `alert` angezeigt wird. Jegliche Funktion wie löschen oder hinzufügen führt anschließend wieder das Laden der Datenbank aus, damit der neue Zustand gezeigt wird.
 
+#### Rate Limiting (für Studierende / Tests)
+
+Der Server nutzt `express-rate-limit`, um Denial-of-Service-Angriffe zu erschweren.
+Damit Studierende bei Tests nicht blockiert werden, sind die Standardwerte absichtlich sehr hoch gesetzt:
+
+* `RATE_LIMIT_WINDOW_MS=60000` (60 Sekunden)
+* `RATE_LIMIT_MAX=10000` (10.000 Requests pro 60 Sekunden und IP)
+
+Diese Werte sind in der `docker-compose.yaml` beim `server` hinterlegt und können bei Bedarf angepasst werden.
+
 #### Datenbankverbindung
 
 In dem Sourcecode wird die Datenbank automatisch vom `db`-Container beim Start initialisiert. Alternativ kann aber auch wie im `server.js` die Datenbank im Sourcecode angelegt werden (siehe auskommentierter Code am Anfang der Datei).

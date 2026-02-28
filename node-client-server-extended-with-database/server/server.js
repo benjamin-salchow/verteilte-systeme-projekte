@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 
 // Database
 const mysql = require('mysql');
@@ -54,69 +55,17 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// -------------------------- RATE LIMITER (BEGINNER NOTES) --------------------------
-// Why this exists:
-// A rate limiter protects endpoints from "too many requests in a very short time".
-// This can happen by accident (e.g., button spam, buggy loop) or on purpose (abuse).
-//
-// How this implementation works:
-// 1) For each client IP address, we store a small "bucket" object in memory.
-// 2) A bucket has:
-//    - count: how many requests arrived in the current time window
-//    - resetAt: timestamp when the current window ends
-// 3) If the window is over, count is reset to 0 and a new window starts.
-// 4) If count goes above maxRequests, we return HTTP 429 ("Too Many Requests").
-//
-// Important: this is an in-memory demo limiter (simple and good for teaching).
-// For production/multi-server setups, use shared storage (e.g., Redis).
-const dbRateBuckets = new Map();
-function dbRateLimit(req, res, next) {
-    // Window length in milliseconds (default: 10 seconds).
-    // You can override this via environment variable RATE_LIMIT_WINDOW_MS.
-    const windowMs = Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS || "10000", 10); // 10s
-    // Maximum allowed requests within one window (default: 120 requests).
-    // You can override this via environment variable RATE_LIMIT_MAX.
-    const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX || "120", 10); // 120 req / 10s
-    const now = Date.now();
-    // Identify the caller. Usually req.ip is enough in Express.
-    const key = req.ip || req.socket.remoteAddress || "unknown";
-
-    // Load existing bucket for this IP or create a fresh one.
-    const bucket = dbRateBuckets.get(key) || { count: 0, resetAt: now + windowMs };
-    // If the time window is over, start a new window.
-    if (now > bucket.resetAt) {
-        bucket.count = 0;
-        bucket.resetAt = now + windowMs;
-    }
-
-    // Count this request.
-    bucket.count += 1;
-    dbRateBuckets.set(key, bucket);
-
-    // If the client exceeded the limit, tell them when to retry.
-    if (bucket.count > maxRequests) {
-        // Remaining wait time, rounded up to full seconds.
-        const retryAfterSeconds = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
-        // Standard header used by clients/tools to know wait time.
-        res.set("Retry-After", String(retryAfterSeconds));
-        return res.status(429).json({
-            message: "Too many requests. Please retry soon.",
-            retry_after_seconds: retryAfterSeconds
-        });
-    }
-
-    // Periodic cleanup: remove old/expired buckets so memory does not grow forever.
-    if (dbRateBuckets.size > 1000) {
-        for (const [ip, state] of dbRateBuckets.entries()) {
-            if (now > state.resetAt) {
-                dbRateBuckets.delete(ip);
-            }
-        }
-    }
-
-    // Limit not exceeded -> continue to the actual route handler.
-    next();
-}
+// Professional rate limiter middleware (DoS protection).
+// For teaching/lab tests, defaults are intentionally very high to avoid blocking students.
+const limiter = rateLimit({
+    windowMs: Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS || "60000", 10), // 60 seconds
+    max: Number.parseInt(process.env.RATE_LIMIT_MAX || "10000", 10), // 10,000 req per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: "Too many requests. Please try again later." }
+});
+// Apply limiter to all routes.
+app.use(limiter);
 
 // Entrypoint - call it with: http://localhost:8080/ -> redirect you to http://localhost:8080/static
 app.get('/', (req, res) => {
@@ -180,7 +129,7 @@ app.get('/button2', (req, res) => {
 
 // ###################### DATABASE PART ######################
 // GET path for database
-app.get('/database', dbRateLimit, (req, res) => {
+app.get('/database', (req, res) => {
     console.log("Request to load all entries from table1");
     // Prepare the get query
     connection.query("SELECT * FROM `table1`;", function (error, results, fields) {
@@ -197,7 +146,7 @@ app.get('/database', dbRateLimit, (req, res) => {
 });
 
 // DELETE path for database
-app.delete('/database/:id', dbRateLimit, (req, res) => {
+app.delete('/database/:id', (req, res) => {
     // This path will delete an entry. For example the path would look like DELETE '/database/5' -> This will delete number 5
     let id = Number.parseInt(req.params.id, 10); // <- load and validate the ID from the path
     if (!Number.isInteger(id)) {
@@ -219,7 +168,7 @@ app.delete('/database/:id', dbRateLimit, (req, res) => {
 });
 
 // POST path for database
-app.post('/database', dbRateLimit, (req, res) => {
+app.post('/database', (req, res) => {
     // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
     // it will be added to the database with a query.
     if (typeof req.body !== "undefined" && typeof req.body.title !== "undefined" && typeof req.body.description !== "undefined") {
@@ -267,7 +216,5 @@ console.log(`Running on http://${HOST}:${PORT}`);
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-
-
 
 
