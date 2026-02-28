@@ -137,10 +137,18 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends php-cli
+          sudo apt-get install -y --no-install-recommends php-cli php-xml php-mbstring
+          # Install PHPUnit
+          wget https://phar.phpunit.de/phpunit-10.5.12.phar -O /usr/local/bin/phpunit
+          chmod +x /usr/local/bin/phpunit
+          # Syntax check all PHP files
           find php-client-server php-client-server-with-database -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+          # Run smoke tests
           php php-client-server/tests/smoke_test.php
           php php-client-server-with-database/server/tests/smoke_test.php
+          # Run PHPUnit tests
+          cd php-client-server-with-database/server
+          phpunit tests/RouteTest.php
 
       - name: C/C++ checks
         run: |

@@ -26,3 +26,6 @@ target_link_libraries(server PRIVATE httplib::httplib ${MARIADB_LIBRARIES} nlohm
 add_executable(server_static_checks tests/server_static_checks.cpp)
 target_compile_definitions(server_static_checks PRIVATE SERVER_SOURCE_FILE="${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 add_test(NAME server_static_checks COMMAND server_static_checks)
+
+add_executable(server_functional_test tests/server_functional_test.cpp)
+add_test(NAME server_functional_test COMMAND server_functional_test)
