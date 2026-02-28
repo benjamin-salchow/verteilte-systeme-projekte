@@ -46,8 +46,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake pkg-config libmariadb-dev nlohmann-json3-dev
-          cmake -S cplusplus-client-server-with-database/server -B cplusplus-client-server-with-database/server/build -DCMAKE_BUILD_TYPE=Release
-          cmake --build cplusplus-client-server-with-database/server/build --target server -j"$(nproc)"
+          BUILD_DIR=/tmp/codeql-cpp-build
+          rm -rf "$BUILD_DIR"
+          cmake -S cplusplus-client-server-with-database/server -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$BUILD_DIR" --target server -j"$(nproc)"
 
       - name: Build Go
         if: ${{ matrix.language == 'go' }}
