@@ -42,7 +42,12 @@ jobs:
               npm install --no-audit --no-fund
             fi
             npm run lint --if-present
-            npm test --if-present
+            test_script="$(python3 -c 'import json; d=json.load(open(\"package.json\")); print((d.get(\"scripts\") or {}).get(\"test\", \"\"))')"
+            if [ -z "$test_script" ] || [ "$test_script" = "echo \"Error: no test specified\" && exit 1" ]; then
+              echo "Skipping placeholder/missing npm test in $dir"
+            else
+              npm test
+            fi
             npm run build --if-present
             popd >/dev/null
           done
