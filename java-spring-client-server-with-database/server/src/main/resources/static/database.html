@@ -43,14 +43,27 @@
 
         <script>
 
+            function showAlert(message, type) {
+                var alertRoot = document.getElementById("alert");
+                alertRoot.textContent = "";
+
+                var box = document.createElement("div");
+                box.className = "alert " + type;
+                box.setAttribute("role", "alert");
+                // Keep bootstrap style, but set message as plain text (XSS-safe).
+                box.textContent = message;
+
+                alertRoot.appendChild(box);
+            }
+
             function showErrorAlert(message) {
                 // Write error alert:
-                document.getElementById("alert").innerHTML = '<div class="alert alert-danger" role="alert">' + message + '</div>';
+                showAlert(message, "alert-danger");
             }
 
             function showSuccessAlert(message) {
                 // Write success alert:
-                document.getElementById("alert").innerHTML = '<div class="alert alert-success" role="alert">' + message + '</div>';
+                showAlert(message, "alert-success");
 
             }
 

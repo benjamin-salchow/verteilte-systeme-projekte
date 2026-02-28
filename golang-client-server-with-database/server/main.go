@@ -143,7 +143,11 @@ func (s *server) requestInfoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	_, _ = w.Write([]byte("This is all I got from the request: " + fmt.Sprintf("%v", r.Header)))
+	// Return structured JSON instead of reflecting headers into an HTML-like string.
+	writeJSON(w, http.StatusOK, map[string]any{
+		"message": "This is all I got from the request",
+		"headers": r.Header,
+	})
 }
 
 func (s *server) clientPostHandler(w http.ResponseWriter, r *http.Request) {

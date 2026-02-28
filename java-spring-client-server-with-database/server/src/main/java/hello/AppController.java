@@ -37,9 +37,13 @@ public class AppController {
         return "This is another path";
     }
 
-    @GetMapping("/request_info")
-    public String requestInfo(@RequestHeader Map<String, String> headers) {
-        return "This is all I got from the request: " + headers;
+    @GetMapping(value = "/request_info", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> requestInfo(@RequestHeader Map<String, String> headers) {
+        // Return JSON so user-controlled header values are not rendered as HTML.
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "This is all I got from the request");
+        body.put("headers", headers);
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/client_post")

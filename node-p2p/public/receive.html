@@ -143,7 +143,7 @@
                         // write the ID to the log and to the website
                         console.log('ID: ' + peer.id);
                         recvId.value = peer.id;
-                        status.innerHTML = "Awaiting connection...";
+                        status.textContent = "Awaiting connection...";
                     });
 
                     // This event is triggered on connection
@@ -159,13 +159,13 @@
 
                         conn = c;
                         console.log("Connected to: " + conn.peer);
-                        status.innerHTML = "Connected";
+                        status.textContent = "Connected";
                         ready();
                     });
 
                     // This event is trigerd if a node disconnect
                     peer.on('disconnected', function () {
-                        status.innerHTML = "Connection lost. Please reconnect";
+                        status.textContent = "Connection lost. Please reconnect";
                         console.log('Connection lost. Please reconnect');
 
                         // Workaround for peer.reconnect deleting previous id
@@ -177,7 +177,7 @@
                     // This event happen when this node lost the connection
                     peer.on('close', function () {
                         conn = null;
-                        status.innerHTML = "Connection destroyed. Please refresh";
+                        status.textContent = "Connection destroyed. Please refresh";
                         console.log('Connection destroyed');
                     });
 
@@ -195,7 +195,7 @@
                 function ready() {
                     conn.on('data', function (data) {
                         console.log("Data recieved");
-                        var cueString = "<span class=\"cueMsg\">Cue: </span>";
+                        var cueString = "Cue: ";
                         switch (data) {
                             case 'Go':
                                 go();
@@ -214,12 +214,12 @@
                                 addMessage(cueString + data);
                                 break;
                             default:
-                                addMessage("<span class=\"peerMsg\">Peer: </span>" + data);
+                                addMessage("Peer: " + data);
                                 break;
                         };
                     });
                     conn.on('close', function () {
-                        status.innerHTML = "Connection reset<br>Awaiting connection...";
+                        status.textContent = "Connection reset. Awaiting connection...";
                         conn = null;
                     });
                 }
@@ -273,11 +273,12 @@
                         return t;
                     };
 
-                    message.innerHTML = "<br><span class=\"msg-time\">" + h + ":" + m + ":" + s + "</span>  -  " + msg + message.innerHTML;
+                    // Use textContent to avoid interpreting message data as HTML.
+                    message.textContent = h + ":" + m + ":" + s + " - " + msg + "\n" + message.textContent;
                 }
 
                 function clearMessages() {
-                    message.innerHTML = "";
+                    message.textContent = "";
                     addMessage("Msgs cleared");
                 }
 
@@ -295,7 +296,7 @@
                         sendMessageBox.value = "";
                         conn.send(msg);
                         console.log("Sent: " + msg)
-                        addMessage("<span class=\"selfMsg\">Self: </span>" + msg);
+                        addMessage("Self: " + msg);
                     } else {
                         console.log('Connection is closed');
                     }

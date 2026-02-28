@@ -110,7 +110,7 @@
                 var sendButton = document.getElementById("sendButton");
                 var clearMsgsButton = document.getElementById("clearMsgsButton");
                 var connectButton = document.getElementById("connect-button");
-                var cueString = "<span class=\"cueMsg\">Cue: </span>";
+                var cueString = "Cue: ";
 
                 /**
                  * Create the Peer object for our end of the connection.
@@ -146,7 +146,7 @@
                         });
                     });
                     peer.on('disconnected', function () {
-                        status.innerHTML = "Connection lost. Please reconnect";
+                        status.textContent = "Connection lost. Please reconnect";
                         console.log('Connection lost. Please reconnect');
 
                         // Workaround for peer.reconnect deleting previous id
@@ -156,7 +156,7 @@
                     });
                     peer.on('close', function () {
                         conn = null;
-                        status.innerHTML = "Connection destroyed. Please refresh";
+                        status.textContent = "Connection destroyed. Please refresh";
                         console.log('Connection destroyed');
                     });
                     peer.on('error', function (err) {
@@ -183,7 +183,7 @@
                     });
 
                     conn.on('open', function () {
-                        status.innerHTML = "Connected to: " + conn.peer;
+                        status.textContent = "Connected to: " + conn.peer;
                         console.log("Connected to: " + conn.peer);
 
                         // Check URL params for comamnds that should be sent immediately
@@ -193,10 +193,10 @@
                     });
                     // Handle incoming data (messages only since this is the signal sender)
                     conn.on('data', function (data) {
-                        addMessage("<span class=\"peerMsg\">Peer:</span> " + data);
+                        addMessage("Peer: " + data);
                     });
                     conn.on('close', function () {
-                        status.innerHTML = "Connection closed";
+                        status.textContent = "Connection closed";
                     });
                 };
 
@@ -207,14 +207,8 @@
                  * Would have been easier to use location.hash.
                  */
                 function getUrlParam(name) {
-                    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-                    var regexS = "[\\?&]" + name + "=([^&#]*)";
-                    var regex = new RegExp(regexS);
-                    var results = regex.exec(window.location.href);
-                    if (results == null)
-                        return null;
-                    else
-                        return results[1];
+                    var params = new URLSearchParams(window.location.search);
+                    return params.get(name);
                 };
 
                 /**
@@ -261,11 +255,12 @@
                         return t;
                     };
 
-                    message.innerHTML = "<br><span class=\"msg-time\">" + h + ":" + m + ":" + s + "</span>  -  " + msg + message.innerHTML;
+                    // Use textContent to avoid interpreting message data as HTML.
+                    message.textContent = h + ":" + m + ":" + s + " - " + msg + "\n" + message.textContent;
                 };
 
                 function clearMessages() {
-                    message.innerHTML = "";
+                    message.textContent = "";
                     addMessage("Msgs cleared");
                 };
 
@@ -283,7 +278,7 @@
                         sendMessageBox.value = "";
                         conn.send(msg);
                         console.log("Sent: " + msg);
-                        addMessage("<span class=\"selfMsg\">Self: </span> " + msg);
+                        addMessage("Self: " + msg);
                     } else {
                         console.log('Connection is closed');
                     }

@@ -10,8 +10,6 @@ services:
       MYSQL_USER: exampleuser
       MYSQL_PASSWORD: examplepass
       MYSQL_HOSTNAME: meinecooledb
-    links:
-      - meinecooledb
     depends_on:
       - meinecooledb
     # Overwrite to nodemon only for DEV! -L is legacy mode, required for Windows / Mac integration.

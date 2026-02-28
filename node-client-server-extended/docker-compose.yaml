@@ -8,7 +8,5 @@ services:
     build: client
     environment:
       - SERVER=server
-    links:
-      - server
     depends_on:
       - server

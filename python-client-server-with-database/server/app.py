@@ -84,7 +84,8 @@ def special_path():
 @app.route('/request_info')
 def request_info():
     logging.info(f"Request content: {request.headers}")
-    return f"This is all I got from the request: {dict(request.headers)}"
+    # Return JSON to avoid reflecting user-controlled headers into HTML.
+    return jsonify({'message': 'This is all I got from the request', 'headers': dict(request.headers)})
 
 # POST path - call it with: POST http://localhost:8080/client_post
 @app.route('/client_post', methods=['POST'])
@@ -124,6 +125,8 @@ def button2():
 @app.route('/database')
 def get_database_entries():
     logging.info("Request to load all entries from table1")
+    conn = None
+    cursor = None
     try:
         conn = get_db_connection()  # Get a new connection
         cursor = conn.cursor(dictionary=True)
@@ -133,15 +136,19 @@ def get_database_entries():
         return jsonify(results), 200
     except Exception as e:
         logging.error(f"Error: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Internal server error'}), 500
     finally:
-        cursor.close()
-        conn.close()  # Ensure the connection is closed
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()  # Ensure the connection is closed
 
 # DELETE path for database - delete an entry by ID
 @app.route('/database/<int:id>', methods=['DELETE'])
 def delete_database_entry(id):
     logging.info(f"Request to delete Item: {id}")
+    conn = None
+    cursor = None
     try:
         conn = get_db_connection()  # Get a new connection
         cursor = conn.cursor()
@@ -151,10 +158,12 @@ def delete_database_entry(id):
         return jsonify({'message': 'Deleted'}), 200
     except Exception as e:
         logging.error(f"Error: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Internal server error'}), 500
     finally:
-        cursor.close()
-        conn.close()  # Ensure the connection is closed
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()  # Ensure the connection is closed
 
 # POST path for database - insert new entry
 @app.route('/database', methods=['POST'])
@@ -164,6 +173,8 @@ def add_database_entry():
 
     if title and description:
         logging.info(f"Client sent database insert request with 'title': {title}; description: {description}")
+        conn = None
+        cursor = None
         try:
             conn = get_db_connection()  # Get a new connection
             cursor = conn.cursor()
@@ -176,10 +187,12 @@ def add_database_entry():
             return jsonify({'message': 'Inserted'}), 200
         except Exception as e:
             logging.error(f"Error: {e}")
-            return jsonify({'error': str(e)}), 500
+            return jsonify({'error': 'Internal server error'}), 500
         finally:
-            cursor.close()
-            conn.close()  # Ensure the connection is closed
+            if cursor is not None:
+                cursor.close()
+            if conn is not None:
+                conn.close()  # Ensure the connection is closed
     else:
         logging.error("Client sent no correct data!")
         return jsonify({'message': 'This function requires a body with "title" and "description"'}), 400

@@ -54,6 +54,70 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// -------------------------- RATE LIMITER (BEGINNER NOTES) --------------------------
+// Why this exists:
+// A rate limiter protects endpoints from "too many requests in a very short time".
+// This can happen by accident (e.g., button spam, buggy loop) or on purpose (abuse).
+//
+// How this implementation works:
+// 1) For each client IP address, we store a small "bucket" object in memory.
+// 2) A bucket has:
+//    - count: how many requests arrived in the current time window
+//    - resetAt: timestamp when the current window ends
+// 3) If the window is over, count is reset to 0 and a new window starts.
+// 4) If count goes above maxRequests, we return HTTP 429 ("Too Many Requests").
+//
+// Important: this is an in-memory demo limiter (simple and good for teaching).
+// For production/multi-server setups, use shared storage (e.g., Redis).
+const dbRateBuckets = new Map();
+function dbRateLimit(req, res, next) {
+    // Window length in milliseconds (default: 10 seconds).
+    // You can override this via environment variable RATE_LIMIT_WINDOW_MS.
+    const windowMs = Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS || "10000", 10); // 10s
+    // Maximum allowed requests within one window (default: 120 requests).
+    // You can override this via environment variable RATE_LIMIT_MAX.
+    const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX || "120", 10); // 120 req / 10s
+    const now = Date.now();
+    // Identify the caller. Usually req.ip is enough in Express.
+    const key = req.ip || req.socket.remoteAddress || "unknown";
+
+    // Load existing bucket for this IP or create a fresh one.
+    const bucket = dbRateBuckets.get(key) || { count: 0, resetAt: now + windowMs };
+    // If the time window is over, start a new window.
+    if (now > bucket.resetAt) {
+        bucket.count = 0;
+        bucket.resetAt = now + windowMs;
+    }
+
+    // Count this request.
+    bucket.count += 1;
+    dbRateBuckets.set(key, bucket);
+
+    // If the client exceeded the limit, tell them when to retry.
+    if (bucket.count > maxRequests) {
+        // Remaining wait time, rounded up to full seconds.
+        const retryAfterSeconds = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
+        // Standard header used by clients/tools to know wait time.
+        res.set("Retry-After", String(retryAfterSeconds));
+        return res.status(429).json({
+            message: "Too many requests. Please retry soon.",
+            retry_after_seconds: retryAfterSeconds
+        });
+    }
+
+    // Periodic cleanup: remove old/expired buckets so memory does not grow forever.
+    if (dbRateBuckets.size > 1000) {
+        for (const [ip, state] of dbRateBuckets.entries()) {
+            if (now > state.resetAt) {
+                dbRateBuckets.delete(ip);
+            }
+        }
+    }
+
+    // Limit not exceeded -> continue to the actual route handler.
+    next();
+}
+
 // Entrypoint - call it with: http://localhost:8080/ -> redirect you to http://localhost:8080/static
 app.get('/', (req, res) => {
     console.log("Got a request and redirect it to the static page");
@@ -116,14 +180,13 @@ app.get('/button2', (req, res) => {
 
 // ###################### DATABASE PART ######################
 // GET path for database
-app.get('/database', (req, res) => {
+app.get('/database', dbRateLimit, (req, res) => {
     console.log("Request to load all entries from table1");
     // Prepare the get query
     connection.query("SELECT * FROM `table1`;", function (error, results, fields) {
         if (error) {
-            // we got an errror - inform the client
-            console.error(error); // <- log error in server
-            res.status(500).json(error); // <- send to client
+            console.error(error);
+            res.status(500).json({ message: "Database query failed" });
         } else {
             // we got no error - send it to the client
             console.log('Success answer from DB: ', results); // <- log results in console
@@ -134,29 +197,29 @@ app.get('/database', (req, res) => {
 });
 
 // DELETE path for database
-app.delete('/database/:id', (req, res) => {
+app.delete('/database/:id', dbRateLimit, (req, res) => {
     // This path will delete an entry. For example the path would look like DELETE '/database/5' -> This will delete number 5
-    let id = req.params.id; // <- load the ID from the path
+    let id = Number.parseInt(req.params.id, 10); // <- load and validate the ID from the path
+    if (!Number.isInteger(id)) {
+        return res.status(400).json({ message: "Invalid id" });
+    }
     console.log("Request to delete Item: " + id); // <- log for debugging
 
-    // Actual executing the query to delete it from the server
-    // Please keep in mind to secure this for SQL injection!
-    connection.query("DELETE FROM `table1` WHERE `table1`.`task_id` = " + id + ";", function (error, results, fields) {
+    // Use a parameterized query to prevent SQL injection.
+    connection.query("DELETE FROM `table1` WHERE `table1`.`task_id` = ?;", [id], function (error, results, fields) {
         if (error) {
-            // we got an errror - inform the client
-            console.error(error); // <- log error in server
-            res.status(500).json(error); // <- send to client
+            console.error(error);
+            res.status(500).json({ message: "Delete failed" });
         } else {
             // Everything is fine with the query
             console.log('Success answer: ', results); // <- log results in console
-            // INFO: Here can be some checks of modification of the result
-            res.status(200).json(results); // <- send it to client
+            res.status(200).json({ message: "Deleted" });
         }
     });
 });
 
 // POST path for database
-app.post('/database', (req, res) => {
+app.post('/database', dbRateLimit, (req, res) => {
     // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
     // it will be added to the database with a query.
     if (typeof req.body !== "undefined" && typeof req.body.title !== "undefined" && typeof req.body.description !== "undefined") {
@@ -165,18 +228,18 @@ app.post('/database', (req, res) => {
         var title = req.body.title;
         var description = req.body.description;
         console.log("Client send database insert request with 'title': " + title + " ; description: " + description); // <- log to server
-        // Actual executing the query. Please keep in mind that this is for learning and education.
-        // In real production environment, this has to be secure for SQL injection!
-        connection.query("INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES (NULL, '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
+        // Use placeholders to avoid SQL injection.
+        connection.query(
+            "INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES (NULL, ?, ?, current_timestamp());",
+            [title, description],
+            function (error, results, fields) {
             if (error) {
-                // we got an errror - inform the client
-                console.error(error); // <- log error in server
-                res.status(500).json(error); // <- send to client
+                console.error(error);
+                res.status(500).json({ message: "Insert failed" });
             } else {
                 // Everything is fine with the query
                 console.log('Success answer: ', results); // <- log results in console
-                // INFO: Here can be some checks of modification of the result
-                res.status(200).json(results); // <- send it to client
+                res.status(200).json({ message: "Inserted" });
             }
         });
     }
@@ -204,11 +267,6 @@ console.log(`Running on http://${HOST}:${PORT}`);
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-
-
-
-
-
 
 
 
