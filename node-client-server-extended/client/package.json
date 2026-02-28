@@ -5,7 +5,8 @@
   "author": "First Last <first.last@example.com>",
   "main": "client.js",
   "scripts": {
-    "start": "node client.js"
+    "start": "node client.js",
+    "test": "node --test"
   },
   "dependencies": {
     "axios": "^1.13"

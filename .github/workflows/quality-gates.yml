@@ -52,6 +52,11 @@ jobs:
             popd >/dev/null
           done
 
+      - name: Node plain TCP tests
+        run: |
+          set -euo pipefail
+          node --test node-plain-tcp/test/*.test.js
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -71,6 +76,9 @@ jobs:
             python -m pip install --upgrade pip
             python -m pip install -r python-client-server-with-database/server/requirements.txt
             python -m compileall python-client-server-with-database/server
+            cd python-client-server-with-database/server
+            SKIP_DB_CHECK=1 python -m unittest discover -s tests -p 'test_*.py' -v
+            cd -
           fi
 
       - name: Set up Go
@@ -103,6 +111,7 @@ jobs:
       - name: C# checks
         run: |
           set -euo pipefail
+          dotnet test csharp-client-server-with-database/server/tests/CsharpClientServerWithDatabase.Tests.csproj --configuration Release
           dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release
 
       - name: Set up Java
@@ -120,9 +129,24 @@ jobs:
           curl -fsSL "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o /tmp/maven.tar.gz
           tar -xzf /tmp/maven.tar.gz -C /tmp
           MVN="/tmp/apache-maven-${MAVEN_VERSION}/bin/mvn"
-          "$MVN" -f java-spring-client-server/pom.xml -B -DskipTests compile
-          "$MVN" -f java-spring-mqtt/pom.xml -B -DskipTests compile
-          "$MVN" -f java-spring-client-server-with-database/server/pom.xml -B -DskipTests compile
+          "$MVN" -f java-spring-client-server/pom.xml -B test
+          "$MVN" -f java-spring-mqtt/pom.xml -B test
+          "$MVN" -f java-spring-client-server-with-database/server/pom.xml -B test
+
+      - name: PHP checks
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends php-cli
+          find php-client-server php-client-server-with-database -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+          php php-client-server/tests/smoke_test.php
+          php php-client-server-with-database/server/tests/smoke_test.php
+
+      - name: Scaffold checks
+        run: |
+          set -euo pipefail
+          ./nodered-server/tests/smoke_test.sh
+          ./rust-client-server/tests/smoke_test.sh
 
       - name: C/C++ checks
         run: |
@@ -132,4 +156,5 @@ jobs:
           BUILD_DIR=/tmp/quality-cpp-build
           rm -rf "$BUILD_DIR"
           cmake -S cplusplus-client-server-with-database/server -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$BUILD_DIR" --target server -j"$(nproc)"
+          cmake --build "$BUILD_DIR" -j"$(nproc)"
+          ctest --test-dir "$BUILD_DIR" --output-on-failure

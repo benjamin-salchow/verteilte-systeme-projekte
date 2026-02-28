@@ -64,8 +64,9 @@ def check_db_connection():
         cursor.close()
         conn.close()  # Ensure the connection is closed
 
-# Check connection at start
-check_db_connection()
+# Check connection at start unless test mode explicitly skips DB bootstrap.
+if os.getenv("SKIP_DB_CHECK", "0") != "1":
+    check_db_connection()
 
 # ###################### ROUTES ######################
 
