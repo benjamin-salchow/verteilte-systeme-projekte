@@ -204,3 +204,6 @@ record ClientPostBody(string? post_content);
 record ButtonNameBody(string? name);
 record DatabaseInsertBody(string? title, string? description);
 record DatabaseEntry(int task_id, string title, string description, DateTime created_at);
+
+// Explicit Program class for WebApplicationFactory compatibility
+public partial class Program { }
