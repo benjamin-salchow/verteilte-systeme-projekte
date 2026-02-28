@@ -1,0 +1,59 @@
+name: Branch Protection Bootstrap
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apply-protection:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      administration: write
+    steps:
+      - name: Apply branch protection to main/master if present
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const branches = ["main", "master"];
+            const requiredChecks = [
+              "Quality Gates / quality",
+              "Dependency Review / dependency-review"
+            ];
+
+            for (const branch of branches) {
+              try {
+                await github.rest.repos.getBranch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  branch
+                });
+              } catch (error) {
+                core.info(`Skipping missing branch: ${branch}`);
+                continue;
+              }
+
+              await github.rest.repos.updateBranchProtection({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch,
+                required_status_checks: {
+                  strict: true,
+                  contexts: requiredChecks
+                },
+                enforce_admins: true,
+                required_pull_request_reviews: {
+                  dismiss_stale_reviews: true,
+                  require_code_owner_reviews: false,
+                  required_approving_review_count: 1
+                },
+                restrictions: null,
+                allow_force_pushes: false,
+                allow_deletions: false,
+                block_creations: false,
+                required_conversation_resolution: true,
+                lock_branch: false,
+                allow_fork_syncing: true
+              });
+
+              core.info(`Branch protection updated for ${branch}`);
+            }

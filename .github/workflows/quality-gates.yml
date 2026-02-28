@@ -1,0 +1,121 @@
+name: Quality Gates
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["**"]
+
+concurrency:
+  group: quality-gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: JavaScript/TypeScript checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t npm_dirs < <(find . -type f -name package.json -not -path '*/node_modules/*' -printf '%h\n' | sort -u)
+          for dir in "${npm_dirs[@]}"; do
+            echo "==> npm checks in $dir"
+            pushd "$dir" >/dev/null
+            if [ -f package-lock.json ]; then
+              npm ci --no-audit --no-fund
+            else
+              npm install --no-audit --no-fund
+            fi
+            npm run lint --if-present
+            npm test --if-present
+            npm run build --if-present
+            popd >/dev/null
+          done
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Python checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f python-client-server-with-database/server/requirements.txt ]; then
+            python -m pip install --upgrade pip
+            python -m pip install -r python-client-server-with-database/server/requirements.txt
+            python -m compileall python-client-server-with-database/server
+          fi
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - name: Go checks
+        run: |
+          set -euo pipefail
+          cd golang-client-server-with-database/server
+          go test ./...
+          go build ./...
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust checks
+        run: |
+          set -euo pipefail
+          cd rust-client-server-with-database/server
+          cargo test --locked
+          cargo build --locked
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: C# checks
+        run: |
+          set -euo pipefail
+          dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Java checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAVEN_VERSION=3.9.12
+          curl -fsSL "https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o /tmp/maven.tar.gz || \
+          curl -fsSL "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o /tmp/maven.tar.gz
+          tar -xzf /tmp/maven.tar.gz -C /tmp
+          MVN="/tmp/apache-maven-${MAVEN_VERSION}/bin/mvn"
+          "$MVN" -f java-spring-client-server/pom.xml -B -DskipTests compile
+          "$MVN" -f java-spring-mqtt/pom.xml -B -DskipTests compile
+          "$MVN" -f java-spring-client-server-with-database/server/pom.xml -B -DskipTests compile
+
+      - name: C/C++ checks
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake pkg-config libmariadb-dev nlohmann-json3-dev
+          BUILD_DIR=/tmp/quality-cpp-build
+          rm -rf "$BUILD_DIR"
+          cmake -S cplusplus-client-server-with-database/server -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$BUILD_DIR" --target server -j"$(nproc)"
