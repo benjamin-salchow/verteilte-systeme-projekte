@@ -6,7 +6,8 @@ use actix_web::{
 };
 use mime;
 use mysql::{params, prelude::*, Pool};
-use rand::Rng;
+use rand::rng;
+use rand::RngExt;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use std::{env, fmt};
@@ -163,7 +164,7 @@ async fn button1(params: web::Form<NameInfo>) -> impl Responder {
 #[get("/button2")]
 async fn button2() -> impl Responder {
     // Generate a random number
-    let random_number = rand::rng().random::<f64>();
+    let random_number : f64 = rng().random();
     // Print it out
     log::info!(
         "Send the following random number to the client: {} | Button2",
