@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [javascript-typescript, python]
+        language: [javascript-typescript, python, rust]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -87,7 +87,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [csharp, java-kotlin, rust]
+        language: [csharp]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -100,6 +100,53 @@ jobs:
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+
+  analyze-java:
+    if: ${{ github.event.repository.private == false }}
+    name: Analyze Compiled (java-kotlin)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Initialize CodeQL (manual build)
+        uses: github/codeql-action/init@v4
+        with:
+          languages: java-kotlin
+          build-mode: manual
+
+      - name: Build Java projects
+        run: |
+          set -euo pipefail
+
+          if [ -f java-spring-client-server/mvnw ]; then
+            (cd java-spring-client-server && chmod +x mvnw && ./mvnw -B -DskipTests compile)
+          fi
+
+          if [ -f java-spring-mqtt/mvnw ]; then
+            (cd java-spring-mqtt && chmod +x mvnw && ./mvnw -B -DskipTests compile)
+          fi
+
+          if [ -f java-spring-client-server-with-database/server/pom.xml ]; then
+            if ! command -v mvn >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y --no-install-recommends maven
+            fi
+            (cd java-spring-client-server-with-database/server && mvn -B -DskipTests compile)
+          fi
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
