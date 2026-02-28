@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	  https://www.apache.org/licenses/LICENSE-2.0
+ *	https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,23 +15,18 @@
  */
 package hello;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext
 public class HelloWorldConfigurationTests {
 
 	@LocalServerPort
@@ -43,7 +38,7 @@ public class HelloWorldConfigurationTests {
 	@Test
 	public void testGreeting() throws Exception {
 		ResponseEntity<String> entity = restTemplate
-				.getForEntity("http://localhost:" + this.port + "/", String.class);
+			.getForEntity("http://localhost:" + this.port + "/", String.class);
 		assertEquals(HttpStatus.OK, entity.getStatusCode());
 	}
 
