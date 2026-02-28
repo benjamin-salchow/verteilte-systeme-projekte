@@ -15,6 +15,11 @@ public class ProgramSmokeTests
             {
                 return candidate;
             }
+            var serverCandidate = Path.Combine(dir.FullName, "server", "Program.cs");
+            if (File.Exists(serverCandidate))
+            {
+                return serverCandidate;
+            }
             dir = dir.Parent;
         }
 

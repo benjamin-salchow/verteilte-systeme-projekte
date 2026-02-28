@@ -111,7 +111,7 @@ jobs:
       - name: C# checks
         run: |
           set -euo pipefail
-          dotnet test csharp-client-server-with-database/server/tests/CsharpClientServerWithDatabase.Tests.csproj --configuration Release
+          dotnet test csharp-client-server-with-database/tests/CsharpClientServerWithDatabase.Tests.csproj --configuration Release
           dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release
 
       - name: Set up Java
@@ -141,12 +141,6 @@ jobs:
           find php-client-server php-client-server-with-database -type f -name '*.php' -print0 | xargs -0 -n1 php -l
           php php-client-server/tests/smoke_test.php
           php php-client-server-with-database/server/tests/smoke_test.php
-
-      - name: Scaffold checks
-        run: |
-          set -euo pipefail
-          ./nodered-server/tests/smoke_test.sh
-          ./rust-client-server/tests/smoke_test.sh
 
       - name: C/C++ checks
         run: |

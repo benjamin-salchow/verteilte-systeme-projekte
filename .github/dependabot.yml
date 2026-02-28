@@ -90,6 +90,12 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 10
 
+  - package-ecosystem: "nuget"
+    directory: "/csharp-client-server-with-database/tests"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
   - package-ecosystem: "docker"
     directory: "/cplusplus-client-server-with-database"
     schedule:
