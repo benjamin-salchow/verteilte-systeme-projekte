@@ -148,7 +148,7 @@ jobs:
           php php-client-server-with-database/server/tests/smoke_test.php
           # Run PHPUnit tests
           cd php-client-server-with-database/server
-          phpunit tests/RouteTest.php
+          php ../../phpunit.phar tests/RouteTest.php
 
       - name: C/C++ checks
         run: |
