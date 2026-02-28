@@ -22,8 +22,11 @@ var dbConfig = new DbConfig(
     Port: 3306
 );
 
-// Fail fast on startup if DB is unreachable/misconfigured.
-await EnsureDatabaseIsReachable(dbConfig);
+// Fail fast on startup if DB is unreachable/misconfigured (skip in test environment).
+if (!Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Testing", StringComparison.OrdinalIgnoreCase))
+{
+    await EnsureDatabaseIsReachable(dbConfig);
+}
 
 // Serve frontend assets from /public under /static.
 app.UseStaticFiles(new StaticFileOptions

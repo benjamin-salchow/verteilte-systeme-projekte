@@ -1,17 +1,29 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace CsharpClientServerWithDatabase.Tests;
 
-public class RouteTests : IClassFixture<WebApplicationFactory<Program>>
+public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<Program> _factory;
 
-    public RouteTests(WebApplicationFactory<Program> factory)
+    public RouteTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
+    }
+
+    public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+    {
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            // Skip database connection during tests
+            builder.UseEnvironment("Testing");
+            return base.CreateHost(builder);
+        }
     }
 
     [Fact]
