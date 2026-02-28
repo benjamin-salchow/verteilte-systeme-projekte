@@ -23,7 +23,7 @@ var dbConfig = new DbConfig(
 );
 
 // Fail fast on startup if DB is unreachable/misconfigured (skip in test environment).
-if (!Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Testing", StringComparison.OrdinalIgnoreCase))
+if (!string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Testing", StringComparison.OrdinalIgnoreCase))
 {
     await EnsureDatabaseIsReachable(dbConfig);
 }

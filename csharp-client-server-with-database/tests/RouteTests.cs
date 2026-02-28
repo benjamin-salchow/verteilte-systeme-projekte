@@ -7,6 +7,16 @@ using Xunit;
 
 namespace CsharpClientServerWithDatabase.Tests;
 
+public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+{
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        // Skip database connection during tests
+        builder.UseEnvironment("Testing");
+        return base.CreateHost(builder);
+    }
+}
+
 public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly CustomWebApplicationFactory<Program> _factory;
@@ -14,16 +24,6 @@ public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
     public RouteTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
-    }
-
-    public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
-    {
-        protected override IHost CreateHost(IHostBuilder builder)
-        {
-            // Skip database connection during tests
-            builder.UseEnvironment("Testing");
-            return base.CreateHost(builder);
-        }
     }
 
     [Fact]
