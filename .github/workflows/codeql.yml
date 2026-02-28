@@ -76,30 +76,32 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
-  analyze-autobuild:
+  analyze-csharp:
     if: ${{ github.event.repository.private == false }}
-    name: Analyze Autobuild (${{ matrix.language }})
+    name: Analyze Compiled (csharp)
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [csharp]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Initialize CodeQL (autobuild)
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Initialize CodeQL (manual build)
         uses: github/codeql-action/init@v4
         with:
-          languages: ${{ matrix.language }}
-          build-mode: autobuild
+          languages: csharp
+          build-mode: manual
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
+      - name: Build C#
+        run: |
+          dotnet build csharp-client-server-with-database/server/CsharpClientServerWithDatabase.csproj --configuration Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
@@ -122,6 +124,14 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Set up Maven
+        run: |
+          set -euo pipefail
+          MAVEN_VERSION=3.9.9
+          curl -fsSL "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o /tmp/maven.tar.gz
+          tar -xzf /tmp/maven.tar.gz -C /tmp
+          echo "/tmp/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+
       - name: Initialize CodeQL (manual build)
         uses: github/codeql-action/init@v4
         with:
@@ -141,10 +151,6 @@ jobs:
           fi
 
           if [ -f java-spring-client-server-with-database/server/pom.xml ]; then
-            if ! command -v mvn >/dev/null 2>&1; then
-              sudo apt-get update
-              sudo apt-get install -y --no-install-recommends maven
-            fi
             (cd java-spring-client-server-with-database/server && mvn -B -DskipTests compile)
           fi
 
