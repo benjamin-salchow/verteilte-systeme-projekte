@@ -87,8 +87,8 @@ public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
         var response = await client.PostAsync("/button1_name", formData);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var result = await response.Content.ReadFromJsonAsync<dynamic>();
-        Assert.Contains("Name is: John", result?.message.ToString());
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Name is: John", content);
     }
 
     [Fact]
