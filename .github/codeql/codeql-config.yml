@@ -1,0 +1,13 @@
+name: "Repository CodeQL Config"
+
+# Exclude generated, vendored, and dependency directories to avoid
+# reporting vulnerabilities in third-party or transient build artifacts.
+paths-ignore:
+  - "**/build/**"
+  - "**/target/**"
+  - "**/node_modules/**"
+  - "**/_deps/**"
+  - "**/.gradle/**"
+  - "**/bin/**"
+  - "**/obj/**"
+  - "**/__pycache__/**"
