@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.0.0...v1.0.1) (2026-03-29)
+
+### Bug Fixes
+
+* update pipeline ([21b1d2c](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/21b1d2c14e6dbb237555b379922d3778196d6fa5))
+
 ## 1.0.0 (2026-03-29)
 
 ### Features
