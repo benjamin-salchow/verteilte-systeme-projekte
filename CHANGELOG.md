@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.0.1...v1.1.0) (2026-03-29)
+
+### Features
+
+* more tests ([94b7279](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/94b7279915213277e9fe843b13f9b312acbb29a2))
+
 ## [1.0.1](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.0.0...v1.0.1) (2026-03-29)
 
 ### Bug Fixes
