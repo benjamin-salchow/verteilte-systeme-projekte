@@ -16,24 +16,29 @@
 package hello;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class HelloWorldConfigurationTests {
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+	@LocalServerPort
+	private int port;
 
 	@Test
 	void rootEndpointReturnsHelloWorld() {
-		ResponseEntity<String> response = restTemplate.getForEntity("/", String.class);
+		ResponseEntity<String> response = WebClient.create("http://localhost:" + this.port)
+			.get()
+			.uri("/")
+			.retrieve()
+			.toEntity(String.class)
+			.block();
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("Hello World", response.getBody());
@@ -41,7 +46,12 @@ public class HelloWorldConfigurationTests {
 
 	@Test
 	void specialPathReturnsSecondaryText() {
-		ResponseEntity<String> response = restTemplate.getForEntity("/special_path", String.class);
+		ResponseEntity<String> response = WebClient.create("http://localhost:" + this.port)
+			.get()
+			.uri("/special_path")
+			.retrieve()
+			.toEntity(String.class)
+			.block();
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("This is another path", response.getBody());
@@ -49,7 +59,11 @@ public class HelloWorldConfigurationTests {
 
 	@Test
 	void unknownRouteReturnsNotFound() {
-		ResponseEntity<String> response = restTemplate.getForEntity("/missing", String.class);
+		ResponseEntity<String> response = WebClient.create("http://localhost:" + this.port)
+			.get()
+			.uri("/missing")
+			.exchangeToMono(clientResponse -> clientResponse.toEntity(String.class))
+			.block();
 
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
