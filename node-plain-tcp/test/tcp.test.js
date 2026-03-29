@@ -18,12 +18,12 @@ test('client connects and writes payload', () => {
   assert.match(clientSource, /client\.write\('Hello, super server! Love, Client\.'/);
 });
 
-test('server logs incoming payloads and closes connections cleanly', () => {
+test('server logs incoming payloads before replying', () => {
   assert.match(serverSource, /socket\.on\('data'/);
-  assert.match(serverSource, /socket\.on\('end'/);
+  assert.match(serverSource, /console\.log\("Received: " \+ textChunk\)/);
 });
 
-test('client reacts to returned data and disconnects', () => {
+test('client reacts to returned data and handles connection errors', () => {
   assert.match(clientSource, /client\.on\('data'/);
-  assert.match(clientSource, /client\.destroy\(\)/);
+  assert.match(clientSource, /client\.on\('error'/);
 });
