@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.0...v1.1.1) (2026-03-29)
+
+### Bug Fixes
+
+* make node tests stable ([975c500](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/975c5005182b80ce01ff4b77d795324953aae2af))
+
 ## [1.1.0](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.0.1...v1.1.0) (2026-03-29)
 
 ### Features
