@@ -1,0 +1,46 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "docker-compose"
+  ],
+  "labels": [
+    "dependencies",
+    "renovate"
+  ],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "dependencyDashboard": true,
+  "rangeStrategy": "bump",
+  "rebaseWhen": "behind-base-branch",
+  "schedule": [
+    "before 9am on monday"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "groupName": "docker compose image updates",
+      "commitMessageTopic": "docker compose dependencies"
+    },
+    {
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "labels": [
+        "dependencies",
+        "renovate",
+        "dependencies:automerge"
+      ]
+    }
+  ]
+}

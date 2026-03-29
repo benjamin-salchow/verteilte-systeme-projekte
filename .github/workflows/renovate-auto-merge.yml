@@ -1,0 +1,39 @@
+name: Renovate Auto Merge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: renovate-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  mark-automerge:
+    if: ${{ github.actor == 'renovate[bot]' && github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Ensure automerge label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: gh label create "dependencies:automerge" --color "0e8a16" --description "Eligible dependency PR for automerge after Quality Gates" --force --repo "$GH_REPO"
+
+      - name: Resolve pull request labels
+        id: labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map((label) => label.name);
+            core.setOutput("eligible", String(labels.includes("dependencies:automerge")));
+
+      - name: Approve eligible Renovate updates
+        if: ${{ steps.labels.outputs.eligible == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr review --approve "$PR_URL"
