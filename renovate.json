@@ -24,18 +24,7 @@
         "docker-compose"
       ],
       "groupName": "docker compose image updates",
-      "commitMessageTopic": "docker compose dependencies"
-    },
-    {
-      "matchManagers": [
-        "docker-compose"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "commitMessageTopic": "docker compose dependencies",
       "labels": [
         "dependencies",
         "renovate",
