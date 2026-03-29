@@ -12,3 +12,10 @@ test('configures mqtt client and topic', () => {
   assert.match(source, /client\.subscribe\('mytopic'/);
   assert.match(source, /client\.publish\('mytopic'/);
 });
+
+test('publishes periodic random messages from the configured node', () => {
+  assert.match(source, /process\.env\.NODENAME/);
+  assert.match(source, /setInterval/);
+  assert.match(source, /Math\.random\(\)/);
+  assert.match(source, /Received:/);
+});

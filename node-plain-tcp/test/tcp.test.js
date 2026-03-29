@@ -17,3 +17,13 @@ test('client connects and writes payload', () => {
   assert.match(clientSource, /client\.connect\(9233/);
   assert.match(clientSource, /client\.write\('Hello, super server! Love, Client\.'/);
 });
+
+test('server logs incoming payloads and closes connections cleanly', () => {
+  assert.match(serverSource, /socket\.on\('data'/);
+  assert.match(serverSource, /socket\.on\('end'/);
+});
+
+test('client reacts to returned data and disconnects', () => {
+  assert.match(clientSource, /client\.on\('data'/);
+  assert.match(clientSource, /client\.destroy\(\)/);
+});

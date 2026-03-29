@@ -12,3 +12,14 @@ test('configures peerjs server', () => {
   assert.match(source, /app\.use\('\/peerjs'/);
   assert.match(source, /app\.use\('\/static'/);
 });
+
+test('serves static frontend and redirects root requests', () => {
+  assert.match(source, /app\.get\('\/'/);
+  assert.match(source, /res\.redirect\('\/static'\)/);
+  assert.match(source, /express\.static\('public'\)/);
+});
+
+test('registers peer connection lifecycle logging', () => {
+  assert.match(source, /peerServer\.on\('connection'/);
+  assert.match(source, /peerServer\.on\('disconnect'/);
+});

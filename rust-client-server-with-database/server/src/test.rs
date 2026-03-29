@@ -13,7 +13,9 @@ mod tests {
     };
 
     use crate::button1;
+    use crate::button2;
     use crate::client_post;
+    use crate::request_info;
     use crate::NameInfo;
     use crate::PostInfo;
     use crate::special_path;
@@ -78,5 +80,32 @@ mod tests {
             .to_request();
         let resp_bad: ServiceResponse = test::call_service(&app, req_bad).await;
         assert_eq!(resp_bad.status(), StatusCode::BAD_REQUEST);
+    }
+
+    #[actix_web::test]
+    async fn handle_request_info_returns_headers() {
+        let app = test::init_service(App::new().service(request_info)).await;
+        let req = test::TestRequest::get()
+            .uri("/request_info")
+            .insert_header(("X-Test", "rust"))
+            .to_request();
+        let resp: ServiceResponse = test::call_service(&app, req).await;
+
+        assert_eq!(resp.status(), StatusCode::OK);
+        let body = to_bytes(resp.into_body()).await.unwrap();
+        let response_body = body.as_str().to_lowercase();
+        assert!(response_body.contains("x-test"));
+        assert!(response_body.contains("rust"));
+    }
+
+    #[actix_web::test]
+    async fn handle_button_2_returns_random_response() {
+        let app = test::init_service(App::new().service(button2)).await;
+        let req = test::TestRequest::get().uri("/button2").to_request();
+        let resp: ServiceResponse = test::call_service(&app, req).await;
+
+        assert_eq!(resp.status(), StatusCode::OK);
+        let body = to_bytes(resp.into_body()).await.unwrap();
+        assert!(body.as_str().starts_with("Antwort: "));
     }
 }

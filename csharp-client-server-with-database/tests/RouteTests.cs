@@ -78,6 +78,15 @@ public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
     }
 
     [Fact]
+    public async Task ClientPost_WithWrongMethod_ReturnsMethodNotAllowed()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.GetAsync("/client_post");
+
+        Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+    }
+
+    [Fact]
     public async Task Button1Name_WithFormData_ReturnsSuccess()
     {
         var client = _factory.CreateClient();
@@ -89,6 +98,17 @@ public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
         Assert.Contains("Name is: John", content);
+    }
+
+    [Fact]
+    public async Task Button1Name_WithJsonBody_ReturnsSuccess()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.PostAsJsonAsync("/button1_name", new { name = "Jane" });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Name is: Jane", content);
     }
 
     [Fact]
@@ -114,6 +134,6 @@ public class RouteTests : IClassFixture<CustomWebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
         Assert.Contains("X-Test", content);
-        Assert.Contains("This is all I got from the request:", content);
+        Assert.Contains("This is all I got from the request", content);
     }
 }
