@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.1...v1.1.2) (2026-03-29)
+
+### Bug Fixes
+
+* make java tests stable ([02f29f7](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/02f29f726dd892e42006e6c9a56deadb9679b8bc))
+
 ## [1.1.1](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.0...v1.1.1) (2026-03-29)
 
 ### Bug Fixes
