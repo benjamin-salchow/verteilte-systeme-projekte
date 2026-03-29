@@ -129,3 +129,14 @@ Wenn du neu startest, nimm diese Reihenfolge:
 ## Lizenz
 
 Siehe [LICENSE](LICENSE).
+
+## Releases
+
+This repository uses `semantic-release` via GitHub Actions to create version tags and GitHub Releases automatically from commits pushed to `main` or `master`.
+
+Use Conventional Commits for release automation:
+
+- `feat:` creates a minor release
+- `fix:` creates a patch release
+- `feat!:` or `BREAKING CHANGE:` creates a major release
+- other commit types do not create a release by default

@@ -2,19 +2,19 @@ name: Dependabot Auto Merge
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: dependabot-auto-merge-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  automerge:
+  mark-automerge:
     if: ${{ github.actor == 'dependabot[bot]' && github.event.repository.private == false }}
     runs-on: ubuntu-latest
     permissions:
-      checks: read
       contents: write
+      issues: write
       pull-requests: write
     steps:
       - name: Fetch Dependabot metadata
@@ -22,6 +22,14 @@ jobs:
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensure automerge label exists
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh label create "dependencies:automerge" --color "0e8a16" --description "Eligible Dependabot PR for automerge after Quality Gates" --force
 
       - name: Approve patch/minor updates
         if: |
@@ -32,64 +40,11 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: gh pr review --approve "$PR_URL"
 
-      - name: Enable auto-merge for patch/minor updates
+      - name: Label patch/minor updates for automerge
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.metadata.outputs.update-type == 'version-update:semver-minor'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-        run: |
-          set +e
-          output=$(gh pr merge --auto --squash "$PR_URL" 2>&1)
-          status=$?
-          set -e
-
-          printf '%s\n' "$output"
-
-          if [ "$status" -eq 0 ]; then
-            exit 0
-          fi
-
-          if printf '%s' "$output" | grep -Fq "Protected branch rules not configured for this branch (enablePullRequestAutoMerge)"; then
-            echo "GitHub native auto-merge is unavailable for this branch. Falling back to workflow-managed merge after checks pass."
-          else
-            exit "$status"
-          fi
-
-          max_attempts=120
-          sleep_seconds=30
-          attempt=1
-
-          while [ "$attempt" -le "$max_attempts" ]; do
-            check_runs_json=$(gh api -H "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/check-runs")
-            statuses_json=$(gh api -H "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/status")
-
-            failing_checks=$(printf '%s' "$check_runs_json" | jq '[.check_runs[] | select((.name | startswith("Dependabot Auto Merge")) | not) | select(.status == "completed") | select((.conclusion == "success" or .conclusion == "neutral" or .conclusion == "skipped") | not)] | length')
-            pending_checks=$(printf '%s' "$check_runs_json" | jq '[.check_runs[] | select((.name | startswith("Dependabot Auto Merge")) | not) | select(.status != "completed")] | length')
-
-            failing_statuses=$(printf '%s' "$statuses_json" | jq '[.statuses[]? | select(.state != "success" and .state != "pending")] | length')
-            pending_statuses=$(printf '%s' "$statuses_json" | jq '[.statuses[]? | select(.state == "pending")] | length')
-
-            echo "Attempt ${attempt}/${max_attempts}: pending checks=${pending_checks}, pending statuses=${pending_statuses}, failing checks=${failing_checks}, failing statuses=${failing_statuses}"
-
-            if [ "$failing_checks" -gt 0 ] || [ "$failing_statuses" -gt 0 ]; then
-              echo "At least one CI check failed. Not merging."
-              exit 1
-            fi
-
-            if [ "$pending_checks" -eq 0 ] && [ "$pending_statuses" -eq 0 ]; then
-              break
-            fi
-
-            sleep "$sleep_seconds"
-            attempt=$((attempt + 1))
-          done
-
-          if [ "$attempt" -gt "$max_attempts" ]; then
-            echo "Timed out waiting for CI checks to finish."
-            exit 1
-          fi
-
-          gh pr merge --squash "$PR_URL"
+        run: gh pr edit "$PR_URL" --add-label "dependencies:automerge"

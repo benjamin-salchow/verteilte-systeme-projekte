@@ -1,0 +1,51 @@
+name: Dependabot Automerge On Success
+
+on:
+  workflow_run:
+    workflows: ["Quality Gates"]
+    types: [completed]
+
+concurrency:
+  group: dependabot-automerge-on-success-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
+
+jobs:
+  merge:
+    if: ${{ github.event.repository.private == false && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Resolve pull request
+        id: pr
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const prs = context.payload.workflow_run.pull_requests || [];
+            if (prs.length === 0) {
+              core.info("No pull request is associated with this workflow run.");
+              core.setOutput("number", "");
+              return;
+            }
+
+            const prNumber = prs[0].number;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const labels = pr.labels.map((label) => label.name);
+            core.setOutput("number", String(pr.number));
+            core.setOutput("url", pr.html_url);
+            core.setOutput("author", pr.user.login);
+            core.setOutput("eligible", String(pr.user.login === "dependabot[bot]" && labels.includes("dependencies:automerge")));
+
+      - name: Merge labeled Dependabot PR
+        if: ${{ steps.pr.outputs.number != '' && steps.pr.outputs.eligible == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: gh pr merge --squash --delete-branch "$PR_URL"
