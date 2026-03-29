@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.2...v1.2.0) (2026-03-29)
+
+### Features
+
+* add renovate ([164ecae](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/164ecaeb4868e0c3b8f9b49d04883c794caac5b9))
+
 ## [1.1.2](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.1...v1.1.2) (2026-03-29)
 
 ### Bug Fixes
