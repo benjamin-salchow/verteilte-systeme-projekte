@@ -29,7 +29,8 @@ jobs:
           steps.metadata.outputs.update-type == 'version-update:semver-minor'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh label create "dependencies:automerge" --color "0e8a16" --description "Eligible Dependabot PR for automerge after Quality Gates" --force
+          GH_REPO: ${{ github.repository }}
+        run: gh label create "dependencies:automerge" --color "0e8a16" --description "Eligible Dependabot PR for automerge after Quality Gates" --force --repo "$GH_REPO"
 
       - name: Approve patch/minor updates
         if: |

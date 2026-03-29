@@ -59,6 +59,8 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
 
   analyze-buildless:
     if: ${{ github.event.repository.private == false }}
@@ -85,6 +87,8 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
 
   analyze-csharp:
     if: ${{ github.event.repository.private == false }}
@@ -116,6 +120,8 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:csharp"
 
   analyze-java:
     if: ${{ github.event.repository.private == false }}
@@ -170,3 +176,5 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:java-kotlin"
