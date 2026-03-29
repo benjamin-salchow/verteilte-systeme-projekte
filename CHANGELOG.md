@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.2.0...v1.3.0) (2026-03-29)
+
+### Features
+
+* automatic for updates after passing tests. ([9153fd1](https://github.com/benjamin-salchow/verteilte-systeme-projekte/commit/9153fd1349eadc315fafdd0f68ba8c0f3df6be09))
+
 ## [1.2.0](https://github.com/benjamin-salchow/verteilte-systeme-projekte/compare/v1.1.2...v1.2.0) (2026-03-29)
 
 ### Features
