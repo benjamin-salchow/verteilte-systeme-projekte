@@ -1,0 +1,3 @@
+[build]
+# This disables crt-static for the Alpine container build.
+rustflags = ["-C", "target-feature=-crt-static"]

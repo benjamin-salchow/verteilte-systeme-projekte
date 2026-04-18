@@ -3,11 +3,6 @@ name = "server"
 version = "0.1.0"
 edition = "2021"
 
-[build]
-# this crt-static is required for the alpine container!
-rustflags='-C target-feature=-crt-static'
-
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
