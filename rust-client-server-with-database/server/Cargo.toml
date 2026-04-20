@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-actix-session = {version = "0.11", features = ["cookie-session"]}
 actix-files = "0.6"
 log = "0.4"
 env_logger = "0.11"
