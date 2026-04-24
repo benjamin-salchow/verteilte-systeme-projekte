@@ -6,7 +6,7 @@ buildscript {
       mavenCentral()
     }
     dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:4.0.5')
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:4.0.6')
 // tag::build[]
         classpath('com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:3.5.3')
 // end::build[]
