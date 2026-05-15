@@ -41,11 +41,20 @@ jobs:
             core.setOutput("number", String(pr.number));
             core.setOutput("url", pr.html_url);
             core.setOutput("author", pr.user.login);
-            core.setOutput("eligible", String(pr.user.login === "dependabot[bot]" && labels.includes("dependencies:automerge")));
+            core.setOutput("eligible", String(pr.state === "open" && pr.user.login === "dependabot[bot]" && labels.includes("dependencies:automerge")));
 
       - name: Merge labeled Dependabot PR
         if: ${{ steps.pr.outputs.number != '' && steps.pr.outputs.eligible == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ steps.pr.outputs.url }}
-        run: gh pr merge --squash --delete-branch "$PR_URL"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "$(gh pr view "$PR_URL" --json autoMergeRequest --jq '.autoMergeRequest != null')" = "true" ]; then
+            echo "Auto-merge is already enabled."
+            exit 0
+          fi
+
+          gh pr merge --auto --squash --delete-branch "$PR_URL"

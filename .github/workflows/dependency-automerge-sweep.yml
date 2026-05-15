@@ -1,0 +1,49 @@
+name: Dependency Automerge Sweep
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+jobs:
+  enable-automerge:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Enable auto-merge for eligible dependency PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          prs="$(gh pr list \
+            --repo "$GH_REPO" \
+            --state open \
+            --label "dependencies:automerge" \
+            --json number,url,author \
+            --jq '.[] | select(.author.login == "dependabot[bot]" or .author.login == "renovate[bot]") | [.number, .url, .author.login] | @tsv')"
+
+          if [ -z "$prs" ]; then
+            echo "No eligible dependency PRs found."
+            exit 0
+          fi
+
+          while IFS=$'\t' read -r number url author; do
+            echo "Enabling auto-merge for #${number} from ${author}"
+            gh pr review --repo "$GH_REPO" --approve "$url" || true
+
+            if [ "$(gh pr view --repo "$GH_REPO" "$url" --json autoMergeRequest --jq '.autoMergeRequest != null')" = "true" ]; then
+              echo "Auto-merge is already enabled for #${number}."
+              continue
+            fi
+
+            if ! gh pr merge --repo "$GH_REPO" --auto --squash --delete-branch "$url"; then
+              echo "::warning::Could not enable auto-merge for #${number}"
+            fi
+          done <<< "$prs"
