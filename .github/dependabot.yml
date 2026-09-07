@@ -13,6 +13,11 @@ updates:
       interval: "daily"
       time: "05:05"
     open-pull-requests-limit: 10
+    # v10 requires conventional-changelog-writer v9, whereas Semantic Release
+    # v25 currently supplies v8. Upgrade this deliberately with the release stack.
+    ignore:
+      - dependency-name: "conventional-changelog-conventionalcommits"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "npm"
     directory: "/node-client-server"
