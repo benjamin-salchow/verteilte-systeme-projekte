@@ -37,4 +37,4 @@ jobs:
         run: cargo audit --ignore RUSTSEC-2026-0258
 
       - name: Cargo deny (advisories)
-        run: cargo deny check advisories --config ../../deny.toml
+        run: cargo deny check --config ../../deny.toml advisories
