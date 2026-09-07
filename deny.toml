@@ -1,0 +1,4 @@
+# h2 0.4.x contains the fix for RUSTSEC-2026-0258, but the current actix-http
+# release still requires h2 0.3.x. Remove this exception once Actix migrates.
+[advisories]
+ignore = ["RUSTSEC-2026-0258"]
