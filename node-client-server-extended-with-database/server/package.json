@@ -9,7 +9,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "express": "^5.2",
+    "express": "^5.3",
     "express-rate-limit": "^8.7.1",
     "mysql": "^2.18"
   }
