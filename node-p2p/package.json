@@ -4,7 +4,7 @@
   "description": "peer2peer demo",
   "main": "index.js",
   "dependencies": {
-    "express": "^5.2",
+    "express": "^5.3",
     "peer": "^1.0.2"
   },
   "devDependencies": {},
